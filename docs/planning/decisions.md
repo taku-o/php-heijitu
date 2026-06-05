@@ -9,7 +9,9 @@
 > - D-1 CaoCsv の HTTP 取得手段: **PHP 標準関数**（guzzle 等の追加依存は使わない。動作環境にバージョン縛りがあるため）
 > - E-3 ドキュメント言語: **en/ja 両方**
 > - G 配布方法: **GitHub の VCS 配布**（Packagist 登録なし。利用者は `repositories` 指定＋`dev-branch` ブランチで取り込む）。リリース工程（タグ付け等）は追加しない
-> - H 依存方針: **コア `require` は最小・プロバイダー依存は `suggest`**（`require-dev` には全プロバイダー依存を入れる）
+> - H 依存方針: **コア `require` は最小・プロバイダー依存は `suggest`**（`require-dev` には全プロバイダー依存）。`ext-mbstring` も `suggest`。依存未導入時は `class_exists()`/`extension_loaded()` で検出し親切な例外を投げる（いずれも可能なら実施）
+> - C-5 例外クラス粒度: **マーカー IF `HeijituException` ＋ `ConfigException` / `ProviderException`（`\RuntimeException` 基底）＋ 不正引数は標準 `\InvalidArgumentException`**
+> - E-2 内部生成日付のタイムゾーン: **実行環境のデフォルト TZ を使用（`time.Local` 相当）。未設定時は `Asia/Tokyo`**
 
 ---
 
@@ -76,7 +78,12 @@ go-heijitu の「埋め込みデータ・外部接続不要」のデフォルト
 
 ### C-5. 例外クラスの粒度
 - 選択肢: 単一の `HeijituException` ／ 用途別（設定読み込み・プロバイダー取得・認証不備など）に分割
-- 推奨: 共通基底（インターフェース or 抽象基底）＋ 必要最小限の派生。go-heijitu に無い細分化はしない（YAGNI）。具体粒度は要決定。
+- 推奨: 共通基底（インターフェース or 抽象基底）＋ 必要最小限の派生。go-heijitu に無い細分化はしない（YAGNI）。
+- ✅ **確定**（判断を一任された）: 以下の最小構成とする。
+  - `Heijitu\Exception\HeijituException`: マーカーインターフェース（本ライブラリが投げる例外の共通型。利用者は `catch (HeijituException $e)` で一括捕捉できる）
+  - `Heijitu\Exception\ConfigException`（`\RuntimeException` を継承し `HeijituException` を実装）: 設定ファイルの読み込み・パース失敗・未対応拡張子
+  - `Heijitu\Exception\ProviderException`（`\RuntimeException` を継承し `HeijituException` を実装）: プロバイダーのデータ取得・API 呼び出し失敗・認証情報不備
+  - 型宣言で防げない不正引数（プログラマエラー）は標準 `\InvalidArgumentException` を使用
 
 ---
 
@@ -97,7 +104,8 @@ go-heijitu の「埋め込みデータ・外部接続不要」のデフォルト
 - 推奨: **`@group integration` で分離**し、通常の `phpunit` では実ネットワークを叩かない。
 
 ### D-4. GoogleCalendar の `google/apiclient` バージョン
-- 推奨: `^2.16`（7.4/8.1両対応）。`google/apiclient-services` も最低PHPがズレないようバージョン確認・固定。⚠️ 8.1 実機検証が必要。
+- 推奨: `^2.16`（7.4/8.1両対応）。`google/apiclient-services` も最低PHPがズレないようバージョン確認・固定。
+- ✅ **確定**: PHP 8.1 上での実機検証は **可能なら Step 4 で実施**（`composer install` 可否・クラスのロード・deprecation 警告の有無）。実装上の支障で無理ならスキップ可。
 
 ---
 
@@ -110,7 +118,12 @@ go-heijitu の「埋め込みデータ・外部接続不要」のデフォルト
 
 ### E-2. タイムゾーンの扱い
 - 選択肢: 利用者任せ（go-heijitu と同じ）／ ライブラリ内で JST に固定
-- 推奨: **利用者任せ＋ドキュメントで JST 明示推奨**（go-heijitu 踏襲）。ただし `firstBusinessDayOfMonth` 等で内部生成する `DateTimeImmutable` のタイムゾーンをどう決めるか ⚠️（go 版は `time.Local`）は実装時に確定が必要。
+- 推奨: **利用者任せ＋ドキュメントで JST 明示推奨**（go-heijitu 踏襲）。
+- ✅ **確定**:
+  - 利用者が渡す日付（`isBusinessDay($t)` 等の引数）は、その `DateTimeImmutable` が持つタイムゾーンを尊重する。
+  - ライブラリが内部生成する日付（`firstBusinessDayOfMonth` / `firstBusinessDaysOfYear` の年月からの生成、`nextBusinessDay` の探索起点）は、**実行環境のデフォルトタイムゾーン**（`date_default_timezone_get()`）に従う（go 版の `time.Local` 相当）。
+  - **実行環境のタイムゾーンが未設定の場合（`ini_get('date.timezone')` が空）は `Asia/Tokyo` を使用**する（ユーザー要望: 未指定時は可能なら日本時間）。
+  - ドキュメントで JST 運用（実行環境のタイムゾーンを `Asia/Tokyo` にする / JST の日付を渡す）を案内する。
 
 ### E-3. ドキュメントの言語と構成
 - go-heijitu は en/ja 両対応（README.md / README-en.md、docs/ja、docs/en、API仕様・使い方・プロバイダーガイド）。
@@ -157,11 +170,13 @@ go-heijitu の「使うプロバイダーの依存だけが取り込まれる」
 | `holiday-jp/holiday_jp` | `suggest` | HolidayJp プロバイダー使用時のみ |
 | `google/apiclient`（`^2.16`） | `suggest` | GoogleCalendar プロバイダー使用時のみ |
 | `symfony/yaml`（`^5.4`） | `suggest` | YAML 設定ファイル使用時のみ（JSON のみなら不要） |
-| caoCsv の依存 | — | 依存なし（PHP 標準関数のみ。D-1） |
+| `ext-mbstring`（拡張） | `suggest` | caoCsv の Shift_JIS デコード（`mb_convert_encoding`）に使用 |
+| caoCsv の Composer 依存 | — | なし（PHP 標準関数のみ。D-1） |
 | `phpunit/phpunit` ＋ 上記プロバイダー依存一式 | `require-dev` | php-heijitu 自身の開発・テスト用（利用者には入らない） |
 
-- 依存未導入のままプロバイダーを `new` した場合、素の挙動は `Error: Class "..." not found`。`class_exists()` で親切な例外メッセージを出すかは**実装時に確定**（go-heijitu に無い機能のため必須ではない）。
-- `ext-mbstring`（caoCsv の Shift_JIS デコード用）を `require` に書くか `suggest`（`ext-mbstring`）にするかは**実装時に確定**。
+- ✅ **確定**（可能なら実施）: `ext-mbstring` は `suggest`（`ext-mbstring`）とする。
+- ✅ **確定**（可能なら実施）: 依存ライブラリ／拡張が未導入のままプロバイダーを使った場合に、`class_exists()` / `extension_loaded()` で検出し、**「`composer require ...` が必要」という親切なメッセージの例外**を投げる。例外型は依存の種類に応じて C-5 の `ProviderException`（プロバイダー依存）/ `ConfigException`（YAML 依存）を用い、新たな例外クラスは追加しない。
+  - 「可能なら」= 実装上の支障がなければ実施する。素の挙動（`Error: Class "..." not found`）でも機能上は成立するため、必須ではない。
 
 ---
 
@@ -178,11 +193,12 @@ go-heijitu の「使うプロバイダーの依存だけが取り込まれる」
 | C-2 | エラー伝播 | ○ 例外 throw |
 | C-3 | 除外日付指定 | ✅ コンストラクタ引数＋設定ローダー |
 | C-4 | null プロバイダー | ○ 型宣言で排除 |
-| C-5 | 例外粒度 | ○ 共通基底＋最小限派生（実装時に確定） |
+| C-5 | 例外粒度 | ✅ マーカー IF `HeijituException` ＋ `ConfigException`/`ProviderException`（`\RuntimeException` 基底）＋ 不正引数は `\InvalidArgumentException` |
 | D-1 | CaoCsv HTTP取得 | ✅ **PHP 標準関数**（guzzle 不採用・追加依存ゼロ） |
 | D-3 | オンライン系テスト | ○ `@group integration` で分離 |
-| D-4 | apiclient | ○ `^2.16`（8.1実機検証） |
+| D-4 | apiclient | ✅ `^2.16`・8.1 実機検証は可能なら Step 4 で実施（無理ならスキップ可） |
 | E-1 | データ陳腐化 | ○ go-heijitu と同方針 |
+| E-2 | 内部生成日付の TZ | ✅ 実行環境デフォルト TZ（`time.Local` 相当）。未設定なら `Asia/Tokyo` |
 | E-3 | ドキュメント言語 | ✅ **en/ja 両方** |
 | G-1 | 配布チャネル | ✅ **GitHub VCS 配布**（Packagist なし・`dev-branch` 取り込み） |
 | G-2 | リリース工程 | ✅ 追加しない（Step 6 を新設しない） |
@@ -190,4 +206,4 @@ go-heijitu の「使うプロバイダーの依存だけが取り込まれる」
 
 ---
 
-_ユーザー確定済み: A-3 / B-1 / C-3 / D-1 / E-3 / G-1 / G-2 / H。残る推奨確定扱いの項目（A-1/A-2/A-4/C-1/C-2/C-4/C-5/D-3/D-4/E-1）も方針として確定とみなし、`workplan.md` の手順に沿って実装に進める。実装時に細部を詰める項目: C-5（例外クラスの具体粒度）、D-4（PHP 8.1 上の apiclient 実機検証）、E-2（内部生成する DateTimeImmutable のタイムゾーン）、H（`ext-mbstring` の require/suggest・class_exists の親切なエラーの要否）。_
+_ユーザー確定済み: A-3 / B-1 / C-3 / C-5 / D-1 / D-4 / E-2 / E-3 / G-1 / G-2 / H。残る推奨確定扱いの項目（A-1/A-2/A-4/C-1/C-2/C-4/D-3/E-1）も方針として確定とみなし、`workplan.md` の手順に沿って実装に進める。「可能なら実施」の留意点: D-4（PHP 8.1 上の apiclient 実機検証）、H（`ext-mbstring` を `suggest`・依存未導入時の親切な例外）。いずれも実装上の支障がなければ実施する。_

@@ -51,7 +51,7 @@ go-heijitu との対応: 構成は同一。Go 固有の作業（`go.mod`）は C
 **プロジェクト初期化**
 - `composer.json` 作成（`name: taku-o/php-heijitu`・`type: library`・`license: MIT`・PSR-4 オートロード）
   - `require` は `"php": "^7.4 || ^8.0 || ^8.1"` のみ（コア依存最小・decisions.md H）
-  - プロバイダー依存（`holiday-jp/holiday_jp`・`google/apiclient:^2.16`・`symfony/yaml:^5.4`）は `suggest`
+  - プロバイダー依存（`holiday-jp/holiday_jp`・`google/apiclient:^2.16`・`symfony/yaml:^5.4`）と `ext-mbstring` は `suggest`（decisions.md H）
   - `require-dev` に `phpunit/phpunit:^9.6` と全プロバイダー依存一式
 - `.gitignore` の確認（`vendor/` 等）
 - PHPUnit 設定（`phpunit.xml`）
@@ -73,7 +73,7 @@ go-heijitu との対応: 構成は同一。Go 固有の作業（`go.mod`）は C
 - `Config.php`: YAML/JSON を拡張子で自動判別して `MonthDay[]` を返す（`symfony/yaml` + 標準 `json_decode`）
 
 **例外**
-- 共通基底例外と、設定読み込み・不正引数の例外（`decisions.md` C-5 の確定に従う）
+- `Heijitu\Exception\HeijituException`（マーカー IF）／ `ConfigException` ／ `ProviderException`（`\RuntimeException` 基底）。型で防げない不正引数は標準 `\InvalidArgumentException`（decisions.md C-5）
 
 **テスト**
 - `MonthDayTest`: `matches()` の確認
@@ -98,6 +98,7 @@ go-heijitu との対応: 構成は同一。Go 固有の作業（`go.mod`）は C
 - `Providers/HolidayJp/Provider.php`: `holiday-jp/holiday_jp` を使った `HolidayProvider` 実装
 - `composer require holiday-jp/holiday_jp`
 - `holidaysBetween` は `between()` の結果を `Holiday[]` に変換し日付昇順ソート
+- （可能なら）`class_exists` で `holiday-jp/holiday_jp` 未導入を検出し、案内する `ProviderException` を投げる（decisions.md H）
 
 **BusinessCalendar 残り API**
 - `nextBusinessDay()`: 翌日以降で最初の営業日
@@ -134,6 +135,7 @@ go-heijitu との対応: 構成は同一。Go 固有の作業（`go.mod`）は C
 - Shift_JIS デコード（`mb_convert_encoding(..., 'UTF-8', 'SJIS-win')`）+ `str_getcsv` でパースし内部保持
 - 点照合（isHoliday/holidayName）は保持データ照合、`holidaysBetween` は範囲フィルタ＋昇順ソート
 - HTTP 取得は **PHP 標準関数（`file_get_contents` または cURL）**（確定）。追加の Composer 依存は導入しない
+- （可能なら）`extension_loaded('mbstring')` で未導入を検出し、`ext-mbstring` の導入を案内する `ProviderException` を投げる（decisions.md H）
 
 **テスト**
 - `Providers/CaoCsv/ProviderTest`:
@@ -168,7 +170,8 @@ Google Calendar API を使った `HolidayProvider` 実装を追加する。
 ### 完了条件
 - オートロード・型エラーなくクラスが読める
 - integration を除く `phpunit` が全て通る
-- ⚠️ PHP 8.1 上で `google/apiclient` が動作することの実機確認（`decisions.md` D-4）
+- PHP 8.1 上で `google/apiclient` が動作することの実機確認（**可能なら実施・無理ならスキップ可**。`composer install` 可否・クラスのロード・deprecation 警告の有無。decisions.md D-4）
+- （可能なら）`class_exists` で `google/apiclient` 未導入を検出し、案内する `ProviderException` を投げる（decisions.md H）
 
 ---
 
