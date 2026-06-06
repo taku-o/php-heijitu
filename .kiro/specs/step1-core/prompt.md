@@ -75,6 +75,23 @@ jj new
 
 -------------
 
+takt --task "/kiro-impl step1-core 1
+必要ならテストを修正して良い。"
+
+/kiro-review-feature step1-core 1
+jj new
+
+-------------
+
+takt --task "/kiro-impl step1-core 2
+必要ならテストを修正して良い。"
+
+/kiro-review-feature step1-core 2
+必要ならテストを修正して良い。
+
+jj new
+
+
 
 
 

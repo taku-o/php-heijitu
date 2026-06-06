@@ -29,7 +29,7 @@
 
 ## Task 2: Core — 例外型・値オブジェクトの実装
 
-- [ ] 2.1 (P) 例外型を実装する
+- [x] 2.1 (P) 例外型を実装する
   - `src/Exception/HeijituException.php` に `interface HeijituException {}` を作成する（メソッドなし）
   - `src/Exception/ConfigException.php` に `class ConfigException extends \RuntimeException implements HeijituException {}` を作成する
   - `src/Exception/ProviderException.php` に `class ProviderException extends \RuntimeException implements HeijituException {}` を作成する
@@ -37,7 +37,7 @@
   - _Requirements: 9.1, 9.2, 9.3, 9.4_
   - _Boundary: Exception Layer_
 
-- [ ] 2.2 (P) MonthDay 値オブジェクトを実装する
+- [x] 2.2 (P) MonthDay 値オブジェクトを実装する
   - `src/MonthDay.php` に `final class MonthDay` を作成し、PHP 7.4 の型付きプロパティ `private int $month`・`private int $day` を使用する
   - `getMonth(): int`・`getDay(): int` の getter を実装する
   - `matches(\DateTimeImmutable $t): bool` を実装する。`(int) $t->format('n')` で月、`(int) $t->format('j')` で日を取得して比較する
@@ -46,14 +46,14 @@
   - _Requirements: 3.1, 3.2, 3.3, 3.4_
   - _Boundary: Core Types_
 
-- [ ] 2.3 (P) Holiday 値オブジェクトを実装する
+- [x] 2.3 (P) Holiday 値オブジェクトを実装する
   - `src/Holiday.php` に `final class Holiday` を作成し、`private \DateTimeImmutable $date`・`private string $name` を型付きプロパティで持たせる
   - `getDate(): \DateTimeImmutable`・`getName(): string` の getter を実装する
   - `new Holiday(new \DateTimeImmutable('2025-01-01'), '元日')` でインスタンスを生成し getter で値を取得できる状態になっている
   - _Requirements: 4.1_
   - _Boundary: Core Types_
 
-- [ ] 2.4 HolidayProvider インターフェースを定義する
+- [x] 2.4 HolidayProvider インターフェースを定義する
   - `src/HolidayProvider.php` に `interface HolidayProvider` を作成する
   - `isHoliday(\DateTimeImmutable $t): bool` を定義する
   - `holidayName(\DateTimeImmutable $t): string` を定義する（非祝日時は空文字返却の PHPDoc を追記）
