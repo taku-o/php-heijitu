@@ -20,7 +20,8 @@
 - [ ] 1.3 Docker 開発環境を構築し composer install を実行する
   - `docker/Dockerfile` を作成し、`ARG PHP_VERSION` で 7.4 / 8.1 を切り替えられるようにする。`ext-mbstring` を導入する
   - `docker/compose.yaml` に `php74`・`php81` の 2 サービスを定義する
-  - `docker compose run php74 composer install` を実行して `vendor/` が生成されることを確認する
+  - `docker compose run php74 composer install` を実行して `vendor/` が生成されることを確認する（composer.lock は 7.4 基準で生成）
+  - `docker compose run php81 composer install` を実行して php81 サービスでも依存解決できることを確認する
   - `docker compose run php74 vendor/bin/phpunit --version` でテストランナーが起動することを確認する
   - _Requirements: 2.3_
 
@@ -76,7 +77,6 @@
   - _Requirements: 6.3, 8.1, 8.2, 8.3, 8.4, 8.5, 9.3_
   - _Depends: 2.1, 2.2_
   - _Boundary: Config Loader_
-  （Task 2.4 HolidayProvider 定義と並列可能 — 異なるバウンダリ）
 
 ---
 
@@ -132,7 +132,7 @@
   - `$excludedDates` に非 `MonthDay` 要素を渡したとき `\InvalidArgumentException` が throw されることをテストする
   - `docker compose run php74 vendor/bin/phpunit --filter BusinessCalendarTest` が全テストパスする
   - _Requirements: 6.1, 6.2, 6.4, 6.5, 7.1, 7.2, 7.3, 7.4, 7.5, 7.6, 7.7, 9.5_
-  - _Depends: 5.2_
+  - _Depends: 4.1, 5.2_
 
 - [ ] 5.4 PHP 7.4 / 8.1 デュアルバージョンでのテスト実行確認
   - `docker compose run php74 vendor/bin/phpunit` を実行し、全テストスイートがパスすることを確認する

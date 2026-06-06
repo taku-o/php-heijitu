@@ -455,7 +455,7 @@ final class Config
 }
 ```
 
-- `symfony/yaml` が未導入の状態で YAML ファイルを渡した場合: `class_exists(\Symfony\Component\Yaml\Yaml::class)` で検出し `ConfigException`（「`composer require symfony/yaml` が必要」）を throw する（可能なら実施・decisions.md H）
+- `symfony/yaml` が未導入の状態で YAML ファイルを渡した場合: `class_exists(\Symfony\Component\Yaml\Yaml::class)` で検出し `ConfigException`（「`composer require symfony/yaml` が必要」）を throw する
 
 ---
 
@@ -635,7 +635,7 @@ JSON:
 - 拡張子が `.yaml`・`.yml`・`.json` 以外
 - symfony/yaml のパース例外
 - `json_decode` が `null` を返す（パース失敗）
-- symfony/yaml が未インストール（`class_exists` で検出、可能なら実施）
+- symfony/yaml が未インストール（`class_exists(\Symfony\Component\Yaml\Yaml::class)` で検出し ConfigException を throw する）
 
 **エラーの握りつぶし禁止**: プロバイダーが throw した例外は `BusinessCalendar::isBusinessDay()` でキャッチせず、そのまま呼び出し元へ伝播する。
 

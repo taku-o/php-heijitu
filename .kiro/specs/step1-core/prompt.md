@@ -67,7 +67,7 @@ jj new
 !jj-merge feature/step1-core
 /commit-commands:commit-push-pr
 
-/review 7
+/review 1
 
 
 -------------
