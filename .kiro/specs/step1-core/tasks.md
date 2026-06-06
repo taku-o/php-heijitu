@@ -82,7 +82,7 @@
 
 ## Task 4: Business Logic — BusinessCalendar の実装
 
-- [ ] 4.1 BusinessCalendar を実装する
+- [x] 4.1 BusinessCalendar を実装する
   - `src/BusinessCalendar.php` に `final class BusinessCalendar` を作成する
   - コンストラクタ `__construct(HolidayProvider $provider, array $excludedDates = [])` を実装する。`foreach ($excludedDates as $item)` で各要素が `MonthDay` でない場合は `\InvalidArgumentException` を throw する
   - `isBusinessDay(\DateTimeImmutable $t, MonthDay ...$extraExcluded): bool` を実装する。判定順: ①`(int) $t->format('N')` が 6（土）または 7（日）→ `false`、②`$this->provider->isHoliday($t)` が `true` → `false`、③`$this->isExcluded($t, $this->excludedDates)` が `true` → `false`、④`$this->isExcluded($t, $extraExcluded)` が `true` → `false`、⑤ → `true`
