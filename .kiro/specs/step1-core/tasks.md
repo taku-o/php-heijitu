@@ -66,7 +66,7 @@
 
 ## Task 3: Config Loader — 設定ファイル読み込みの実装
 
-- [ ] 3.1 (P) Config::loadExcludedDates() を実装する
+- [x] 3.1 (P) Config::loadExcludedDates() を実装する
   - `src/Config.php` に `final class Config` と `public static function loadExcludedDates(string $path): array` を作成する
   - 拡張子 `.yaml`・`.yml` のとき `\Symfony\Component\Yaml\Yaml::parseFile()` でパースする。`class_exists` で `symfony/yaml` 未インストールを検出した場合は `ConfigException` を throw する
   - 拡張子 `.json` のとき `file_get_contents` + `json_decode` でパースする。デコード失敗（`null` 返却）時は `ConfigException` を throw する

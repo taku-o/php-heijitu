@@ -1,0 +1,6 @@
+{
+  "excluded_dates": [
+    { "month": 8, "day": 15 },
+    { "month": 12, "day": 29 }
+  ]
+}
