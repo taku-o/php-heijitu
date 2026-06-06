@@ -2,7 +2,7 @@
 
 ## Task 1: Foundation — プロジェクト設定と開発環境のセットアップ
 
-- [ ] 1.1 Composer パッケージ定義を作成する
+- [x] 1.1 Composer パッケージ定義を作成する
   - `composer.json` を作成し、パッケージ名 `taku-o/php-heijitu`、タイプ `library`、ライセンス MIT を宣言する
   - `require` には PHP バージョン制約 `^7.4 || ^8.0 || ^8.1` のみを記載し、外部パッケージは記載しない
   - `suggest` に `holiday-jp/holiday_jp`、`google/apiclient`、`symfony/yaml`、`ext-mbstring` を記載する
@@ -11,13 +11,13 @@
   - `composer.json` に構文エラーがなく、`composer validate` が通る状態になっている
   - _Requirements: 1.1, 1.2, 1.3, 1.4, 1.5, 1.6_
 
-- [ ] 1.2 PHPUnit 設定ファイルを作成する
+- [x] 1.2 PHPUnit 設定ファイルを作成する
   - `phpunit.xml` を作成し、`bootstrap="vendor/autoload.php"` を設定する
   - テストスイートを `tests/` ディレクトリに向ける
   - `vendor/bin/phpunit --list-suites` を実行してテストランナーが起動する状態になっている
   - _Requirements: 1.5, 2.3_
 
-- [ ] 1.3 Docker 開発環境を構築し composer install を実行する
+- [x] 1.3 Docker 開発環境を構築し composer install を実行する
   - `docker/Dockerfile` を作成し、`ARG PHP_VERSION` で 7.4 / 8.1 を切り替えられるようにする。`ext-mbstring` を導入する
   - `docker/compose.yaml` に `php74`・`php81` の 2 サービスを定義する
   - `docker compose run php74 composer install` を実行して `vendor/` が生成されることを確認する（composer.lock は 7.4 基準で生成）

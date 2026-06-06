@@ -69,6 +69,9 @@ jj new
 
 /review 1
 
+改善提案と軽微修正を取り込んでください。
+
+/commit-push-pr-update
 
 -------------
 

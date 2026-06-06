@@ -1,0 +1,30 @@
+{
+  "name": "taku-o/php-heijitu",
+  "type": "library",
+  "license": "MIT",
+  "description": "日本の営業日計算ライブラリ（go-heijitu の PHP 移植版）",
+  "require": {
+    "php": "^7.4 || ^8.0"
+  },
+  "suggest": {
+    "holiday-jp/holiday_jp": "HolidayJp プロバイダー使用時に必要",
+    "google/apiclient": "GoogleCalendar プロバイダー使用時に必要 (^2.16)",
+    "symfony/yaml": "YAML 設定ファイル使用時に必要 (^5.4)",
+    "ext-mbstring": "CaoCsv プロバイダーの Shift_JIS デコードに必要"
+  },
+  "require-dev": {
+    "phpunit/phpunit": "^9.6",
+    "symfony/yaml": "^5.4",
+    "holiday-jp/holiday_jp": "^2.3"
+  },
+  "autoload": {
+    "psr-4": {
+      "Heijitu\\": "src/"
+    }
+  },
+  "autoload-dev": {
+    "psr-4": {
+      "Heijitu\\Tests\\": "tests/"
+    }
+  }
+}
