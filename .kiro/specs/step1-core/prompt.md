@@ -62,6 +62,15 @@ jj new
 /kiro-approve-tasks step1-core
 jj new
 
+/kiro-review-spec step1-core
+
+!jj-merge feature/step1-core
+/commit-commands:commit-push-pr
+
+/review 7
+
+
+-------------
 
 
 
