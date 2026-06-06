@@ -11,7 +11,7 @@ go-heijitu は5ステップで開発された（コア → holidayjp+全API → 
 実装着手の前提（詳細は `decisions.md`）。主要論点は**ユーザー確定済み**。
 
 1. **確定した方針**:
-   - PHP: **7.4 を基準に開発し 8.1 でもエラーにならない状態**（7.4 構文、`"php": "^7.4 || ^8.0 || ^8.1"`）
+   - PHP: **7.4 を基準に開発し 8.1 でもエラーにならない状態**（7.4 構文、`"php": "^7.4 || ^8.0"`。`^8.0` は 8.1 を含む）
    - デフォルトプロバイダー: **`holiday-jp/holiday_jp`**
    - 除外日付指定: **コンストラクタ引数＋設定ローダー**
    - CaoCsv の HTTP 取得: **PHP 標準関数**（guzzle 不採用・追加依存ゼロ）
@@ -50,7 +50,7 @@ go-heijitu との対応: 構成は同一。Go 固有の作業（`go.mod`）は C
 
 **プロジェクト初期化**
 - `composer.json` 作成（`name: taku-o/php-heijitu`・`type: library`・`license: MIT`・PSR-4 オートロード）
-  - `require` は `"php": "^7.4 || ^8.0 || ^8.1"` のみ（コア依存最小・decisions.md H）
+  - `require` は `"php": "^7.4 || ^8.0"` のみ（コア依存最小・decisions.md H。`^8.0` は 8.1 を含む）
   - プロバイダー依存（`holiday-jp/holiday_jp`・`google/apiclient:^2.16`・`symfony/yaml:^5.4`）と `ext-mbstring` は `suggest`（decisions.md H）
   - `require-dev` に `phpunit/phpunit:^9.6` と全プロバイダー依存一式
 - `.gitignore` の確認（`vendor/` 等）
