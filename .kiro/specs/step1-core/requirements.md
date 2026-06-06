@@ -38,7 +38,7 @@
 #### Acceptance Criteria
 
 1. The php-heijitu ライブラリ shall declare its Composer package as `taku-o/php-heijitu`, of type `library`, under the MIT license.
-2. The php-heijitu ライブラリ shall declare a PHP version constraint of `^7.4 || ^8.0 || ^8.1` in the `require` section.
+2. The php-heijitu ライブラリ shall declare a PHP version constraint of `^7.4 || ^8.0` in the `require` section. (`^8.0` includes PHP 8.1.)
 3. The php-heijitu ライブラリ shall map the `Heijitu\` namespace to `src/` and the `Heijitu\Tests\` namespace to `tests/` via PSR-4 autoloading.
 4. Where a holiday provider or optional feature depends on an external package (`holiday-jp/holiday_jp`, `google/apiclient`, `symfony/yaml`) or on the `ext-mbstring` extension, the php-heijitu ライブラリ shall list that dependency under `suggest` rather than `require`.
 5. The php-heijitu ライブラリ shall list `phpunit/phpunit` (`^9.6`) and all provider/feature dependencies under `require-dev` for its own development and testing.

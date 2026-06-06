@@ -4,7 +4,7 @@
 
 - [x] 1.1 Composer パッケージ定義を作成する
   - `composer.json` を作成し、パッケージ名 `taku-o/php-heijitu`、タイプ `library`、ライセンス MIT を宣言する
-  - `require` には PHP バージョン制約 `^7.4 || ^8.0 || ^8.1` のみを記載し、外部パッケージは記載しない
+  - `require` には PHP バージョン制約 `^7.4 || ^8.0` のみを記載し、外部パッケージは記載しない（`^8.0` は 8.1 を含む）
   - `suggest` に `holiday-jp/holiday_jp`、`google/apiclient`、`symfony/yaml`、`ext-mbstring` を記載する
   - `require-dev` に `phpunit/phpunit ^9.6`・`symfony/yaml ^5.4`・プロバイダー依存を記載する
   - PSR-4 オートロードで `Heijitu\` を `src/`、`Heijitu\Tests\` を `tests/` に対応させる

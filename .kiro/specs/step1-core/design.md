@@ -105,7 +105,7 @@ BusinessCalendar → HolidayProvider, MonthDay, ProviderException
 
 | Layer | Choice / Version | Role | Notes |
 |-------|-----------------|------|-------|
-| Runtime | PHP `^7.4 \|\| ^8.0 \|\| ^8.1` | ライブラリ実行環境 | 7.4 構文のみ使用、8.1 deprecation 警告ゼロ |
+| Runtime | PHP `^7.4 \|\| ^8.0` | ライブラリ実行環境 | 7.4 構文のみ使用、8.1 deprecation 警告ゼロ（`^8.0` は 8.1 を含む） |
 | Package | Composer 2 | 依存管理・PSR-4 オートロード | `require` に PHP のみ、他は `suggest`/`require-dev` |
 | Testing | phpunit/phpunit `^9.6` | 単体テスト | 7.4/8.1 両対応の唯一の系列 |
 | Config (YAML) | symfony/yaml `^5.4` | YAML 設定ファイルのパース | `require-dev` 兼 `suggest`。7.4/8.1 対応は v5.4 のみ |

@@ -166,7 +166,7 @@ func WithConfig(path string) (Option, error)
 
 - **日付**: `DateTimeImmutable` 推奨（不変）。タイムゾーンは `new DateTimeZone('Asia/Tokyo')` を明示するのが安全。
 - **テスト**: **PHPUnit 9.6系が 7.4・8.1 両対応の唯一の系列**（10以降は 8.1 必須で 7.4 不可）。→ `phpunit/phpunit:^9.6`。
-- **オートロード**: PSR-4。`composer.json` の `require` に `"php": "^7.4 || ^8.0 || ^8.1"` のように両対応制約を記述。
+- **オートロード**: PSR-4。`composer.json` の `require` に `"php": "^7.4 || ^8.0"` のように両対応制約を記述（`^8.0` は 8.1 を含む）。
 
 ---
 
