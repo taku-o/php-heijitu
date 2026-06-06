@@ -96,7 +96,7 @@
 
 ## Task 5: Tests — 単体テストの実装と動作確認
 
-- [ ] 5.1 (P) MonthDay の単体テストを実装する
+- [x] 5.1 (P) MonthDay の単体テストを実装する
   - `tests/MonthDayTest.php` を作成する
   - 月・日ともに一致する日付で `matches()` が `true` を返すことをテストする（異なる年でも `true`）
   - 月が不一致の場合に `false` を返すことをテストする
@@ -107,7 +107,7 @@
   - _Requirements: 3.1, 3.2, 3.3, 3.4_
   - _Boundary: Core Types_
 
-- [ ] 5.2 (P) Config の単体テストとテストフィクスチャを実装する
+- [x] 5.2 (P) Config の単体テストとテストフィクスチャを実装する
   - `tests/testdata/config.yaml` を作成する（`excluded_dates` に 2 件以上のエントリを含む）
   - `tests/testdata/config.json` を作成する（同様の内容）
   - `tests/ConfigTest.php` を作成し、YAML ファイルから `MonthDay[]` を正しく読み込むことをテストする
@@ -119,7 +119,7 @@
   - _Requirements: 8.1, 8.2, 8.3, 8.4, 8.5, 9.3_
   - _Boundary: Config Loader_
 
-- [ ] 5.3 BusinessCalendar の単体テストを実装する
+- [x] 5.3 BusinessCalendar の単体テストを実装する
   - `tests/BusinessCalendarTest.php` を作成する。各テストメソッド内で匿名クラスを用いて `HolidayProvider` を実装する
   - 土曜日に `isBusinessDay()` が `false` を返すことをテストする
   - 日曜日に `isBusinessDay()` が `false` を返すことをテストする
@@ -134,7 +134,7 @@
   - _Requirements: 6.1, 6.2, 6.4, 6.5, 7.1, 7.2, 7.3, 7.4, 7.5, 7.6, 7.7, 9.5_
   - _Depends: 4.1, 5.2_
 
-- [ ] 5.4 PHP 7.4 / 8.1 デュアルバージョンでのテスト実行確認
+- [x] 5.4 PHP 7.4 / 8.1 デュアルバージョンでのテスト実行確認
   - `docker compose run php74 vendor/bin/phpunit` を実行し、全テストスイートがパスすることを確認する
   - `docker compose run php81 vendor/bin/phpunit` を実行し、全テストスイートがパスすることを確認する
   - `docker compose run php81 vendor/bin/phpunit 2>&1 | grep -i "deprecated"` の出力が空であることを確認し、PHP 8.1 での deprecation 警告ゼロを確認する
