@@ -46,9 +46,21 @@ jj new
 
 /kiro-spec-design step1-core
 /kiro-validate-design step1-core
+
+Issue 1
+    foreach ($excludedDates as $item) での instanceof チェック + \InvalidArgumentException を選択する。
+Issue 2
+    Technology Stack の Docker 行または File Structure Plan の docker/ 説明に「composer
+      install は php74 サービスで実行（7.4 基準で composer.lock を生成）」の一文を追記する。
+
 /kiro-approve-design step1-core
 jj new
 
+-------------
+
+/kiro-spec-tasks step1-core
+/kiro-approve-tasks step1-core
+jj new
 
 
 
