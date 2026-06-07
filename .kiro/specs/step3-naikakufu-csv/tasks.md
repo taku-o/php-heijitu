@@ -14,7 +14,7 @@
   - Observable: `vendor/bin/phpunit` を引数なしで実行しても `@group integration` テストがスキップされ、`--group integration` を付けた場合のみ実行される
   - _Requirements: 4.3_
 
-- [ ] 2. CaoCsv\Provider — コンストラクタ・CSV 読み込みの実装
+- [x] 2. CaoCsv\Provider — コンストラクタ・CSV 読み込みの実装
   - `HolidayProvider` インターフェースを実装した `Provider` クラスを新規作成する
   - コンストラクタで mbstring 拡張の導入確認を行い、未導入時はインストール案内付きの例外を throw する
   - ローカルファイルパスが指定された場合はそのファイルを、未指定の場合は内閣府の固定 URL から CSV を取得し、取得失敗時は例外を throw する

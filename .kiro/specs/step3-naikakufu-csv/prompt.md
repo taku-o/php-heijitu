@@ -100,4 +100,19 @@ takt --task "/kiro-impl step3-naikakufu-csv 1
 
 jj new
 
+-------------
+
+takt --task "/kiro-impl step3-naikakufu-csv 2
+必要ならテストを修正して良い。"
+
+/kiro-review-feature step3-naikakufu-csv 2
+必要ならテストを修正して良い。
+
+jj new
+
+-------------
+
+
+
+
 

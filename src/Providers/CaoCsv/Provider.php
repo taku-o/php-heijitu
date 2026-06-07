@@ -123,7 +123,8 @@ final class Provider implements HolidayProvider
             }
 
             $date = \DateTimeImmutable::createFromFormat('Y/m/d', $dateStr);
-            if ($date === false) {
+            $parseErrors = \DateTimeImmutable::getLastErrors();
+            if ($date === false || ($parseErrors !== false && ($parseErrors['error_count'] > 0 || $parseErrors['warning_count'] > 0))) {
                 continue;
             }
 
