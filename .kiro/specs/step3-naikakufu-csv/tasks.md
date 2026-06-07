@@ -1,15 +1,15 @@
 # Implementation Plan
 
-- [ ] 1. フィクスチャ・設定ファイルの準備
+- [x] 1. フィクスチャ・設定ファイルの準備
 
-- [ ] 1.1 Shift_JIS テストフィクスチャと `.gitattributes` の作成
+- [x] 1.1 Shift_JIS テストフィクスチャと `.gitattributes` の作成
   - `tests/Providers/CaoCsv/testdata/` ディレクトリを作成する
   - `syukujitsu_test.csv` を Shift_JIS エンコードで作成する（ヘッダー行 + 既知祝日5〜10件の最小データ）
   - `.gitattributes` を新規作成または更新し、`tests/Providers/CaoCsv/testdata/syukujitsu_test.csv binary` を追記する
   - Observable: フィクスチャが Shift_JIS バイト列を保持しており、`.gitattributes` の `binary` 属性設定で git による文字コード変換が抑制されている
   - _Requirements: 4.1_
 
-- [ ] 1.2 `phpunit.xml` への integration グループ除外設定
+- [x] 1.2 `phpunit.xml` への integration グループ除外設定
   - `phpunit.xml` に `<groups><exclude><group>integration</group></exclude></groups>` を追加する
   - Observable: `vendor/bin/phpunit` を引数なしで実行しても `@group integration` テストがスキップされ、`--group integration` を付けた場合のみ実行される
   - _Requirements: 4.3_

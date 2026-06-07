@@ -41,9 +41,7 @@ final class Provider implements HolidayProvider
             $holidays[] = new Holiday($date, $entry['name']);
         }
 
-        usort($holidays, function (Holiday $a, Holiday $b): int {
-            return $a->getDate() <=> $b->getDate();
-        });
+        usort($holidays, fn(Holiday $a, Holiday $b): int => $a->getDate() <=> $b->getDate());
 
         return $holidays;
     }

@@ -76,6 +76,28 @@ jj new
 /review 3
 
 
+これらの修正を取り込んでください。
+  1. requirements.md Req 1.2 の「option」表記
+  "instantiated with a csvPath option pointing to a local file"
+  1. 設計では直接引数 string $csvPath = ''
+  を採用（配列オプション方式を不採用）したにもかかわらず、要件が「option」という表現を使っている。実装者
+  が配列オプション形式と誤解する可能性がある。「parameter」か「引数」への変更を推奨。
 
+  2. requirements.md Req 3.1 の「used」の曖昧さ
+  "If the mbstring PHP extension is not loaded when CaoCsv\Provider is used"
+  2. 「used」は各メソッド呼び出し時と解釈できるが、設計ではコンストラクタ先頭でのチェックを明示している
+  。「is instantiated」に変更すると実装タイミングが明確になる。
+
+jj new
+
+-------------
+
+takt --task "/kiro-impl step3-naikakufu-csv 1
+必要ならテストを修正して良い。"
+
+/kiro-review-feature step3-naikakufu-csv 1
+必要ならテストを修正して良い。
+
+jj new
 
 
