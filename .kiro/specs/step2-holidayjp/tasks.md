@@ -95,8 +95,8 @@
   - _Boundary: BusinessCalendarTest_
   - _Depends: 1.1, 1.2, 1.3, 2.1, 2.2, 2.3, 2.4_
 
-- [ ] 4. PHP 7.4・8.1 両環境での全テスト通過確認
-- [ ] 4.1 Docker 両バージョンで phpunit を実行し全テストが通過することを確認する
+- [x] 4. PHP 7.4・8.1 両環境での全テスト通過確認
+- [x] 4.1 Docker 両バージョンで phpunit を実行し全テストが通過することを確認する
   - `docker compose run php74 vendor/bin/phpunit` が全テスト通過する
   - `docker compose run php81 vendor/bin/phpunit` が全テスト通過し、deprecation 警告が出ない
   - Step 1 で実装した既存テスト（isBusinessDay 系）も引き続き通過することを確認する
