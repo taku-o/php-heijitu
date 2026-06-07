@@ -144,6 +144,24 @@ takt --task "/kiro-impl step2-holidayjp 3
 
 jj new
 
+-------------
+
+/kiro-impl step2-holidayjp 4
+必要ならテストを修正して良い。
+
+/kiro-review-feature step2-holidayjp 4
+必要ならテストを修正して良い。
+
+jj new
+
+-------------
+
+!jj-merge feature/step2-holidayjp
+/commit-push-pr-update
+/review 2
+
+
+
 
 
 
