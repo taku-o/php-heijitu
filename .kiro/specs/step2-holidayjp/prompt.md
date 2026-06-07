@@ -70,5 +70,24 @@ jj new
 
 -------------
 
+/kiro-spec-tasks step2-holidayjp
+
+
+/kiro-approve-tasks step2-holidayjp
+jj new
+
+/kiro-review-spec step2-holidayjp
+
+!jj-merge feature/step2-holidayjp
+/commit-commands:commit-push-pr
+
+/review 1
+
+改善提案と軽微修正を取り込んでください。
+
+/commit-push-pr-update
+
+-------------
+
 
 
