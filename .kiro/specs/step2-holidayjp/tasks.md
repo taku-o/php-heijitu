@@ -64,8 +64,8 @@
   - _Requirements: 5.1, 5.2, 5.3_
   - _Boundary: BusinessCalendar_
 
-- [ ] 3. テスト実装
-- [ ] 3.1 (P) HolidayJp\ProviderTest を実装する
+- [x] 3. テスト実装
+- [x] 3.1 (P) HolidayJp\ProviderTest を実装する
   - `tests/Providers/HolidayJp/ProviderTest.php` を新規作成し、名前空間 `Heijitu\Tests\Providers\HolidayJp` を宣言する（PSR-4 で `tests/` 配下に自動対応済み）
   - 以下のテストメソッドを実装する:
     - `testIsHolidayReturnsTrueForKnownHoliday` — `2020-01-01` → `true`
@@ -80,7 +80,7 @@
   - _Boundary: HolidayJp\ProviderTest_
   - _Depends: 1.1, 1.2, 1.3_
 
-- [ ] 3.2 (P) BusinessCalendarTest に残り API のテストを追記する
+- [x] 3.2 (P) BusinessCalendarTest に残り API のテストを追記する
   - 既存の `tests/BusinessCalendarTest.php` に以下の 8 テストメソッドを追記する（既存テストは変更しない）:
     - `testNextBusinessDaySkipsWeekend` — 入力 `2020-01-10`（金）、期待値 `2020-01-13`（月）
     - `testNextBusinessDaySkipsHoliday` — 入力 `2019-12-31`、期待値 `2020-01-02`（1/1 が元日のため HolidayJp\Provider 使用）

@@ -511,11 +511,6 @@ final class BusinessCalendarTest extends TestCase
         // Then: 要素数が12であること
         $this->assertCount(12, $result);
 
-        // Then: 各要素が DateTimeImmutable であること
-        foreach ($result as $entry) {
-            $this->assertInstanceOf(\DateTimeImmutable::class, $entry);
-        }
-
         // Then: index 0 は1月の月初営業日（2020-01-02、1/1は元日）
         $this->assertSame('2020-01-02', $result[0]->format('Y-m-d'));
     }

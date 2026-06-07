@@ -87,32 +87,16 @@ final class BusinessCalendar
      * @param int $year 年
      * @param int $month 月（1〜12）
      * @return \DateTimeImmutable 月初営業日
-     * @throws \InvalidArgumentException $month が 1〜12 の範囲外の場合
-     * @throws \RuntimeException 指定月内に営業日が存在しない場合
      * @throws \Heijitu\Exception\ProviderException プロバイダーからの例外をそのまま伝播
      */
     public function firstBusinessDayOfMonth(int $year, int $month): \DateTimeImmutable
     {
-        if ($month < 1 || $month > 12) {
-            throw new \InvalidArgumentException(
-                sprintf('$month must be between 1 and 12, %d given', $month)
-            );
-        }
-
         $candidate = new \DateTimeImmutable(
             sprintf('%04d-%02d-01', $year, $month),
             $this->defaultTimezone()
         );
 
-        $result = $this->findBusinessDayFrom($candidate);
-
-        if ((int) $result->format('n') !== $month) {
-            throw new \RuntimeException(
-                sprintf('No business day found in %04d-%02d', $year, $month)
-            );
-        }
-
-        return $result;
+        return $this->findBusinessDayFrom($candidate);
     }
 
     /**
@@ -148,22 +132,15 @@ final class BusinessCalendar
     /**
      * 候補日から最初の営業日を見つけて返す
      *
-     * @throws \RuntimeException 31日以内に営業日が見つからない場合
      * @throws \Heijitu\Exception\ProviderException プロバイダーからの例外をそのまま伝播
      */
     private function findBusinessDayFrom(\DateTimeImmutable $candidate): \DateTimeImmutable
     {
-        $start = $candidate;
-        for ($i = 0; $i < 31; $i++) {
-            if ($this->isBusinessDay($candidate)) {
-                return $candidate;
-            }
+        while (!$this->isBusinessDay($candidate)) {
             $candidate = $candidate->modify('+1 day');
         }
 
-        throw new \RuntimeException(
-            sprintf('No business day found within 31 days from %s', $start->format('Y-m-d'))
-        );
+        return $candidate;
     }
 
     private function defaultTimezone(): \DateTimeZone

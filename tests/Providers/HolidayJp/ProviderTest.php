@@ -11,17 +11,21 @@ use PHPUnit\Framework\TestCase;
 
 final class ProviderTest extends TestCase
 {
+    private Provider $provider;
+
+    protected function setUp(): void
+    {
+        $this->provider = new Provider();
+    }
+
     // -------------------------------------------------------
     // HolidayProvider インターフェースの実装確認
     // -------------------------------------------------------
 
     public function testImplementsHolidayProviderInterface(): void
     {
-        // Given: Provider をインスタンス化する
-        $provider = new Provider();
-
         // Then: HolidayProvider インターフェースを実装している
-        $this->assertInstanceOf(HolidayProvider::class, $provider);
+        $this->assertInstanceOf(HolidayProvider::class, $this->provider);
     }
 
     // -------------------------------------------------------
@@ -30,11 +34,8 @@ final class ProviderTest extends TestCase
 
     public function testIsHolidayReturnsTrueForKnownHoliday(): void
     {
-        // Given: Provider をインスタンス化する
-        $provider = new Provider();
-
         // When: 既知の祝日（2020-01-01 元日）で判定する
-        $result = $provider->isHoliday(new \DateTimeImmutable('2020-01-01'));
+        $result = $this->provider->isHoliday(new \DateTimeImmutable('2020-01-01'));
 
         // Then: true を返す
         $this->assertTrue($result);
@@ -46,11 +47,8 @@ final class ProviderTest extends TestCase
 
     public function testIsHolidayReturnsFalseForNonHoliday(): void
     {
-        // Given: Provider をインスタンス化する
-        $provider = new Provider();
-
         // When: 祝日でない日付（2020-01-02）で判定する
-        $result = $provider->isHoliday(new \DateTimeImmutable('2020-01-02'));
+        $result = $this->provider->isHoliday(new \DateTimeImmutable('2020-01-02'));
 
         // Then: false を返す
         $this->assertFalse($result);
@@ -62,11 +60,8 @@ final class ProviderTest extends TestCase
 
     public function testHolidayNameReturnsNameForKnownHoliday(): void
     {
-        // Given: Provider をインスタンス化する
-        $provider = new Provider();
-
         // When: 既知の祝日（2020-01-01 元日）で名前を取得する
-        $result = $provider->holidayName(new \DateTimeImmutable('2020-01-01'));
+        $result = $this->provider->holidayName(new \DateTimeImmutable('2020-01-01'));
 
         // Then: '元日' を返す
         $this->assertSame('元日', $result);
@@ -78,11 +73,8 @@ final class ProviderTest extends TestCase
 
     public function testHolidayNameReturnsEmptyStringForNonHoliday(): void
     {
-        // Given: Provider をインスタンス化する
-        $provider = new Provider();
-
         // When: 祝日でない日付（2020-01-02）で名前を取得する
-        $result = $provider->holidayName(new \DateTimeImmutable('2020-01-02'));
+        $result = $this->provider->holidayName(new \DateTimeImmutable('2020-01-02'));
 
         // Then: 空文字を返す
         $this->assertSame('', $result);
@@ -94,13 +86,10 @@ final class ProviderTest extends TestCase
 
     public function testHolidaysBetweenReturnsHolidaysInRange(): void
     {
-        // Given: Provider をインスタンス化する
-        $provider = new Provider();
-
         // When: 2020-01-01〜2020-01-13 の範囲で祝日を取得する
         $from = new \DateTimeImmutable('2020-01-01');
         $to = new \DateTimeImmutable('2020-01-13');
-        $result = $provider->holidaysBetween($from, $to);
+        $result = $this->provider->holidaysBetween($from, $to);
 
         // Then: 2件（元日・成人の日）を昇順で返す
         $this->assertCount(2, $result);
@@ -120,13 +109,10 @@ final class ProviderTest extends TestCase
 
     public function testHolidaysBetweenReturnsSortedByDateAscending(): void
     {
-        // Given: Provider をインスタンス化する
-        $provider = new Provider();
-
         // When: 3件以上の祝日を含む範囲（2020-04-01〜2020-05-31）を指定する
         $from = new \DateTimeImmutable('2020-04-01');
         $to = new \DateTimeImmutable('2020-05-31');
-        $result = $provider->holidaysBetween($from, $to);
+        $result = $this->provider->holidaysBetween($from, $to);
 
         // Then: 3件以上返ること
         $this->assertGreaterThanOrEqual(3, count($result));
@@ -153,13 +139,10 @@ final class ProviderTest extends TestCase
 
     public function testHolidaysBetweenReturnsEmptyArrayWhenFromAfterTo(): void
     {
-        // Given: Provider をインスタンス化する
-        $provider = new Provider();
-
         // When: from > to の範囲を指定する
         $from = new \DateTimeImmutable('2020-01-13');
         $to = new \DateTimeImmutable('2020-01-01');
-        $result = $provider->holidaysBetween($from, $to);
+        $result = $this->provider->holidaysBetween($from, $to);
 
         // Then: 空配列を返す
         $this->assertSame([], $result);
@@ -171,12 +154,9 @@ final class ProviderTest extends TestCase
 
     public function testHolidaysBetweenIncludesBothEndpoints(): void
     {
-        // Given: Provider をインスタンス化する
-        $provider = new Provider();
-
         // When: from == to == 祝日で範囲を指定する
         $date = new \DateTimeImmutable('2020-01-01');
-        $result = $provider->holidaysBetween($date, $date);
+        $result = $this->provider->holidaysBetween($date, $date);
 
         // Then: 元日1件を返す
         $this->assertCount(1, $result);
@@ -190,13 +170,10 @@ final class ProviderTest extends TestCase
 
     public function testHolidaysBetweenReturnsEmptyArrayWhenNoHolidaysInRange(): void
     {
-        // Given: Provider をインスタンス化する
-        $provider = new Provider();
-
         // When: 祝日のない範囲（2020-01-02〜2020-01-12）を指定する
         $from = new \DateTimeImmutable('2020-01-02');
         $to = new \DateTimeImmutable('2020-01-12');
-        $result = $provider->holidaysBetween($from, $to);
+        $result = $this->provider->holidaysBetween($from, $to);
 
         // Then: 空配列を返す
         $this->assertSame([], $result);
@@ -208,13 +185,10 @@ final class ProviderTest extends TestCase
 
     public function testHolidaysBetweenReturnsDateTimeImmutableInHoliday(): void
     {
-        // Given: Provider をインスタンス化する
-        $provider = new Provider();
-
         // When: 祝日を含む範囲を指定する
         $from = new \DateTimeImmutable('2020-01-01');
         $to = new \DateTimeImmutable('2020-01-01');
-        $result = $provider->holidaysBetween($from, $to);
+        $result = $this->provider->holidaysBetween($from, $to);
 
         // Then: Holiday の date が DateTimeImmutable である
         $this->assertInstanceOf(\DateTimeImmutable::class, $result[0]->getDate());
