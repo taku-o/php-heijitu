@@ -114,4 +114,28 @@ takt --task "/kiro-impl step2-holidayjp 1
 
 jj new
 
+-------------
+
+takt --task "/kiro-impl step2-holidayjp 2
+必要ならテストを修正して良い。"
+
+/kiro-review-feature step2-holidayjp 2
+必要ならテストを修正して良い。
+
+エラーを投げる。基本発生しないため。
+「月内に営業日が存在しない場合」
+
+このループはどんな処理で発生する？
+「無限ループの上限」
+
+findBusinessDayFromで発生する無限ループなら、
+1ヶ月想定にする。
+31ループを上限としよう。
+
+jj new
+
+-------------
+
+
+
 

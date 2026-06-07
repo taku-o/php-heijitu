@@ -115,6 +115,39 @@ final class ProviderTest extends TestCase
     }
 
     // -------------------------------------------------------
+    // 正常系: holidaysBetween — 3件以上の祝日が昇順ソートされる（ARCH-001 再発防止）
+    // -------------------------------------------------------
+
+    public function testHolidaysBetweenReturnsSortedByDateAscending(): void
+    {
+        // Given: Provider をインスタンス化する
+        $provider = new Provider();
+
+        // When: 3件以上の祝日を含む範囲（2020-04-01〜2020-05-31）を指定する
+        $from = new \DateTimeImmutable('2020-04-01');
+        $to = new \DateTimeImmutable('2020-05-31');
+        $result = $provider->holidaysBetween($from, $to);
+
+        // Then: 3件以上返ること
+        $this->assertGreaterThanOrEqual(3, count($result));
+
+        // Then: 全要素が日付昇順であること
+        for ($i = 1; $i < count($result); $i++) {
+            $this->assertLessThanOrEqual(
+                0,
+                $result[$i - 1]->getDate() <=> $result[$i]->getDate(),
+                sprintf(
+                    'index %d (%s) が index %d (%s) より後の日付',
+                    $i - 1,
+                    $result[$i - 1]->getDate()->format('Y-m-d'),
+                    $i,
+                    $result[$i]->getDate()->format('Y-m-d')
+                )
+            );
+        }
+    }
+
+    // -------------------------------------------------------
     // 正常系: holidaysBetween — from > to で空配列（要件 1.7）
     // -------------------------------------------------------
 
