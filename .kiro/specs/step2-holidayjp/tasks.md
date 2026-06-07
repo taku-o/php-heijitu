@@ -4,7 +4,7 @@
 - [ ] 1.1 Provider クラスの骨格を作成し、依存未導入時の検出を実装する
   - `src/Providers/HolidayJp/Provider.php` を新規作成し、名前空間 `Heijitu\Providers\HolidayJp` を宣言する
   - `final class Provider implements HolidayProvider` を宣言し、インターフェースの 3 メソッドスタブを配置する
-  - コンストラクタで `class_exists(\HolidayJp\HolidayJp::class)` を確認し、false の場合は `ProviderException` を throw する（可能なら実施）
+  - コンストラクタで `class_exists(\HolidayJp\HolidayJp::class)` を確認し、false の場合は `ProviderException` を throw する
   - `composer dump-autoload` 後に `new \Heijitu\Providers\HolidayJp\Provider()` がオートロードエラーなく実行できる
   - _Requirements: 1.1, 1.8_
   - _Boundary: HolidayJp\Provider_
@@ -29,8 +29,8 @@
 - [ ] 2. (P) BusinessCalendar 残り API の実装
 - [ ] 2.1 nextBusinessDay を実装する
   - `nextBusinessDay(\DateTimeImmutable $from): \DateTimeImmutable` を `BusinessCalendar` に追加する
-  - `$from->modify('+1 day')` を起点とし `isBusinessDay($candidate)` が true になるまで 1 日ずつ前進させる
-  - `$from` の TZ を引き継ぐため内部で TZ の追加設定は不要
+  - `date_default_timezone_get()` で TZ を取得し `new \DateTimeZone($tz)` を生成する
+  - `new \DateTimeImmutable($from->format('Y-m-d'), $tz)->modify('+1 day')` を起点に `isBusinessDay($candidate)` が true になるまで 1 日ずつ前進させる
   - コンストラクタの `excludedDates` が `isBusinessDay()` 経由で自動適用される
   - プロバイダーが例外を throw した場合はそのまま伝播する
   - `nextBusinessDay(new DateTimeImmutable('2020-01-10'))` が `2020-01-13` を返す（週末スキップ）
@@ -39,7 +39,7 @@
 
 - [ ] 2.2 firstBusinessDayOfMonth を実装する
   - `firstBusinessDayOfMonth(int $year, int $month): \DateTimeImmutable` を追加する
-  - `date_default_timezone_get() ?: 'Asia/Tokyo'` で TZ を取得し `new \DateTimeZone($tz)` を生成する
+  - `date_default_timezone_get()` で TZ を取得し `new \DateTimeZone($tz)` を生成する
   - `new \DateTimeImmutable(sprintf('%04d-%02d-01', $year, $month), $tz)` を起点に `isBusinessDay()` でループする
   - コンストラクタの `excludedDates` が `isBusinessDay()` 経由で自動適用される
   - プロバイダーが例外を throw した場合はそのまま伝播する
@@ -78,6 +78,7 @@
   - `phpunit --filter ProviderTest` が全テスト通過する
   - _Requirements: 6.1_
   - _Boundary: HolidayJp\ProviderTest_
+  - _Depends: 1.1, 1.2, 1.3_
 
 - [ ] 3.2 (P) BusinessCalendarTest に残り API のテストを追記する
   - 既存の `tests/BusinessCalendarTest.php` に以下の 8 テストメソッドを追記する（既存テストは変更しない）:
@@ -92,6 +93,7 @@
   - `phpunit --filter BusinessCalendarTest` が既存テストを含む全テスト通過する
   - _Requirements: 6.2, 6.3_
   - _Boundary: BusinessCalendarTest_
+  - _Depends: 1.1, 1.2, 1.3, 2.1, 2.2, 2.3, 2.4_
 
 - [ ] 4. PHP 7.4・8.1 両環境での全テスト通過確認
 - [ ] 4.1 Docker 両バージョンで phpunit を実行し全テストが通過することを確認する
@@ -99,3 +101,4 @@
   - `docker compose run php81 vendor/bin/phpunit` が全テスト通過し、deprecation 警告が出ない
   - Step 1 で実装した既存テスト（isBusinessDay 系）も引き続き通過することを確認する
   - _Requirements: 6.4, 6.5_
+  - _Depends: 3.1, 3.2_

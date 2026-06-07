@@ -71,23 +71,42 @@ jj new
 -------------
 
 /kiro-spec-tasks step2-holidayjp
-
-
 /kiro-approve-tasks step2-holidayjp
 jj new
 
 /kiro-review-spec step2-holidayjp
+
+「ProviderExceptionを投げる機能を実装する
+テストが難しければ、テストが甘くなっても仕方ない。
+
+改善提案と軽微な問題の修正を取り込んでください。
+
+
+途中、見つかったこの問題、最終的にはドキュメントに記載したい。
+後々のタスクでドキュメント記載の作業を忘れないように、docs/planningに記載してくれない？
+「動作確認には使えるけど、運用では別のプロバイダーを使うべき」、と。
+  1. holiday-jp/holiday_jp のデータ範囲（既知の弱点）
+  ライブラリの祝日データは
+  2020年で更新停止しています。2021年以降の祝日（山の日の日付変更など）はカバーされません。
+
+これを選択
+  │ A-1    │ $tz = date_default_timezone_get() ?: 'Asia/Tokyo' を $tz = date_default_timezone_get()  │
+  │        │ に変更し、フォールバック仕様を削除する（PHP 標準に委ねる）
+  │ B-1    │ nextBusinessDay も同様に実行環境 TZ を取得し、戻り値を実行環境 TZ の DateTimeImmutable  │
+  │        │ にする
+
+jj new
+
+
 
 !jj-merge feature/step2-holidayjp
 /commit-commands:commit-push-pr
 
 /review 1
 
-改善提案と軽微修正を取り込んでください。
 
 /commit-push-pr-update
 
 -------------
-
 
 

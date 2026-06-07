@@ -26,7 +26,7 @@ Step 1 で実装済みの `isBusinessDay()` とコア型・インターフェー
 - **Adjacent expectations**:
   - `HolidayProvider` インターフェースは Step 1 で定義済み。本ステップはその実装を提供する。
   - `BusinessCalendar` のコンストラクタおよび `isBusinessDay()` は Step 1 で実装済み。残り API はこの判定ロジックを前提とする。
-  - `holiday-jp/holiday_jp` のデータには将来年のカバレッジに限界がある（go-heijitu と同じ既知の弱点）。最新性が必要な場合の対応は後続ステップのプロバイダーに委ねる。
+  - `holiday-jp/holiday_jp` のデータには将来年のカバレッジに限界がある（go-heijitu と同じ既知の弱点）。最新性が必要な場合の対応は後続ステップのプロバイダーに委ねる。データが存在しない 2021 年以降の日付を `nextBusinessDay` / `firstBusinessDayOfMonth` に渡した場合、営業日が発見されず無限ループが発生し得る。この動作はライブラリのデータ範囲外であり、本ステップでは対処しない（go-heijitu と同方針）。
 
 ---
 
@@ -45,7 +45,7 @@ Step 1 で実装済みの `isBusinessDay()` とコア型・インターフェー
 5. When `holidayName(DateTimeImmutable $t)` is called for a date not recognized as a holiday, the `HolidayJp\Provider` shall return an empty string.
 6. When `holidaysBetween(DateTimeImmutable $from, DateTimeImmutable $to)` is called, the `HolidayJp\Provider` shall return all Japanese public holidays within the `$from`–`$to` range (両端含む) as a `Holiday[]` sorted in ascending date order.
 7. When `holidaysBetween` is called with a `$from` date that is after `$to`, the `HolidayJp\Provider` shall return an empty array.
-8. If the `holiday-jp/holiday_jp` library is not installed when `HolidayJp\Provider` is used, the php-heijitu ライブラリ shall throw a `ProviderException` with a message that guides the user to install the missing dependency. （可能なら実施。未実施時のデフォルト挙動は `Error: Class not found`。）
+8. If the `holiday-jp/holiday_jp` library is not installed when `HolidayJp\Provider` is used, the php-heijitu ライブラリ shall throw a `ProviderException` with a message that guides the user to install the missing dependency.
 
 ---
 
@@ -58,7 +58,7 @@ Step 1 で実装済みの `isBusinessDay()` とコア型・インターフェー
 1. When `nextBusinessDay(DateTimeImmutable $from)` is called, the php-heijitu ライブラリ shall return the earliest business day that falls strictly after `$from` (the date of `$from` itself is not a candidate).
 2. When `nextBusinessDay` is called and the immediately following day is a Saturday, Sunday, or holiday, the php-heijitu ライブラリ shall continue advancing until the first day that qualifies as a business day is found.
 3. When `nextBusinessDay` is called, the php-heijitu ライブラリ shall apply the same excluded date rules (コンストラクタで指定された除外日付) as `isBusinessDay`.
-4. When `nextBusinessDay` generates internal candidate dates, the php-heijitu ライブラリ shall use the execution environment's default timezone (`date_default_timezone_get()`). If no default timezone is configured, it shall fall back to `Asia/Tokyo`.
+4. When `nextBusinessDay` generates internal candidate dates, the php-heijitu ライブラリ shall use the execution environment's default timezone (`date_default_timezone_get()`) to construct the candidate `DateTimeImmutable` values.
 5. If the `HolidayProvider` throws an exception during `nextBusinessDay`, the php-heijitu ライブラリ shall propagate it to the caller without suppressing it.
 
 ---
@@ -71,7 +71,7 @@ Step 1 で実装済みの `isBusinessDay()` とコア型・インターフェー
 
 1. When `firstBusinessDayOfMonth(int $year, int $month)` is called, the php-heijitu ライブラリ shall return the first business day on or after the 1st of the specified year and month.
 2. When the 1st of the specified month is not a business day (Saturday, Sunday, 祝日, またはコンストラクタで登録された除外日付), the php-heijitu ライブラリ shall advance day-by-day until a business day within that month is found.
-3. When `firstBusinessDayOfMonth` generates internal candidate dates, the php-heijitu ライブラリ shall use the execution environment's default timezone. If no default timezone is configured, it shall fall back to `Asia/Tokyo`.
+3. When `firstBusinessDayOfMonth` generates internal candidate dates, the php-heijitu ライブラリ shall use the execution environment's default timezone (`date_default_timezone_get()`) to construct the candidate `DateTimeImmutable` values.
 4. If the `HolidayProvider` throws an exception during `firstBusinessDayOfMonth`, the php-heijitu ライブラリ shall propagate it to the caller without suppressing it.
 
 ---
@@ -95,7 +95,7 @@ Step 1 で実装済みの `isBusinessDay()` とコア型・インターフェー
 #### Acceptance Criteria
 
 1. When `holidays(DateTimeImmutable $from, DateTimeImmutable $to)` is called, the php-heijitu ライブラリ shall return the `Holiday[]` produced by the provider's `holidaysBetween($from, $to)` without modification.
-2. The php-heijitu ライブラリ shall not apply the constructor-supplied excluded dates when returning holidays; the result reflects only the provider's holiday data.
+2. The php-heijitu ライブラリ shall not apply the constructor-supplied excluded dates when returning holidays; the result reflects only the provider's holiday data.（除外日付は「営業日判定」の概念であり、祝日の定義には影響しない。`isBusinessDay()` が false を返す日付であっても `holidays()` はその日を返す。）
 3. If the `HolidayProvider` throws an exception during `holidays`, the php-heijitu ライブラリ shall propagate it to the caller without suppressing it.
 
 ---
