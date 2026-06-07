@@ -73,7 +73,7 @@ jj new
 jj new
 !jj-merge feature/step3-naikakufu-csv
 /commit-commands:commit-push-pr
-/review 2
+/review 3
 
 
 
