@@ -169,3 +169,30 @@ holidaysBetween(DateTimeImmutable $from, DateTimeImmutable $to): Holiday[]
 - `allow_url_fopen` の PHP デフォルト値と Docker 環境（php74/php81 サービス）での設定状態
 - 内閣府 CSV の実際の行構造（ヘッダー行の正確な内容・区切り文字の確認）
 - git の `core.autocrlf` / `.gitattributes` によるバイナリ扱い設定の有無（Shift_JIS ファイル保護）
+
+---
+
+## 設計合成決定事項（設計フェーズ確定）
+
+### D-1: コンストラクタシグネチャ — `string $csvPath = ''` を採用
+
+- **選択肢**: 配列オプション `array $options = []` vs 直接文字列引数 `string $csvPath = ''`
+- **決定**: `string $csvPath = ''` を採用
+- **理由**: 型安全（PHP 7.4 でも静的解析で検出可能）・利用箇所が直感的（`new Provider()` vs `new Provider([])`)・配列オプション方式は将来的な追加オプションがない限り冗長
+
+### D-2: オンライン取得実装 — `file_get_contents` のみ（cURL フォールバックなし）
+
+- **選択肢**: `file_get_contents` のみ / cURL フォールバック追加
+- **決定**: `file_get_contents` のみを採用
+- **理由**: `allow_url_fopen=On` は PHP のデフォルト設定（変更は明示的な `php.ini` 設定が必要）。本プロジェクトの Docker 環境でも有効。実装をシンプルに保つことを優先。オンライン取得に失敗した場合は ProviderException で伝播する。
+
+### D-3: 内部データ保持構造 — `array<string, string>` 連想配列
+
+- **選択肢**: `['YYYY-MM-DD' => '祝日名']` 連想配列 / `Holiday[]` ソート済み配列
+- **決定**: 連想配列 `array<string, string>` を採用
+- **理由**: `isHoliday` / `holidayName` で O(1) ハッシュ照合が可能。`holidaysBetween` ではループフィルタ + usort で対応。`HolidayJp\Provider` の usort パターンと統一できる。
+
+### D-4: `.gitattributes` への `binary` 属性追加
+
+- **決定**: `tests/Providers/CaoCsv/testdata/syukujitsu_test.csv binary` を `.gitattributes` に追加する
+- **理由**: git の自動 LF 変換（`core.autocrlf` や `text` 属性）が Shift_JIS ファイルのバイト列を破損させる可能性がある。`binary` 属性で変換を抑制する。
