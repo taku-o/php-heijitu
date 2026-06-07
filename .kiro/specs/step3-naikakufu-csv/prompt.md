@@ -51,6 +51,13 @@ jj new
   - Suggestion: File Structure Plan の "Modified Files" に phpunit.xml を追加し、<groups><exclude>
   の追加を明記する。
 
+/kiro-approve-design  step3-naikakufu-csv
+jj new
+
+-------------
+
+/kiro-spec-tasks step3-naikakufu-csv
+/kiro-approve-tasks  step3-naikakufu-csv
 
 
 
