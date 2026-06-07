@@ -58,6 +58,22 @@ jj new
 
 /kiro-spec-tasks step3-naikakufu-csv
 /kiro-approve-tasks  step3-naikakufu-csv
+jj new
+
+/kiro-review-spec step3-naikakufu-csv
+
+修正お願いします
+  修正を推奨（ブロッカー）:
+  1. tasks.md のタスク 2・3 を自然言語記述に書き換える —
+  現在の実装詳細（file_get_contents・mb_convert_encoding・isset($this->holidays[...]) 等）を design.md
+  への参照に置き換え、「何を実現するか」の記述に変更する
+
+軽微な問題で直せるものは直して。
+
+jj new
+!jj-merge feature/step3-naikakufu-csv
+/commit-commands:commit-push-pr
+/review 2
 
 
 

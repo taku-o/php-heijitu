@@ -91,7 +91,8 @@ graph LR
     CaoCsvProvider -->|fetches| CabOfficeURL
 ```
 
-**Architecture Integration**:
+#### Architecture Integration
+
 - パターン: `HolidayJp\Provider` と同一の「プロバイダーアダプター」パターン。データソースが異なるのみ。
 - 依存方向: `CaoCsv\Provider` → Step 1 コア（`HolidayProvider` / `Holiday` / `ProviderException`）のみ
 - 既存変更: なし（新規ファイル追加のみ）
@@ -251,7 +252,7 @@ final class Provider implements HolidayProvider
 
 - **コンストラクタ**: `extension_loaded('mbstring')` を先頭でチェック → 未導入なら ProviderException。`csvPath` 非空時は `file_get_contents($csvPath)`、空時は `file_get_contents(CABINET_OFFICE_CSV_URL)` でCSV取得。取得結果が `false` なら ProviderException。
 - **内部定数**: 内閣府CSVの固定URL（`https://www8.cao.go.jp/chosei/shukujitsu/syukujitsu.csv`）は `private const CABINET_OFFICE_CSV_URL` で定義する。
-- **CSV パース手順**: `mb_convert_encoding($content, 'UTF-8', 'SJIS-win')` → 行分割 → ヘッダー行スキップ → 各行 `str_getcsv($line)` → `[0]` が `'YYYY/MM/DD'`・`[1]` が祝日名 → `DateTimeImmutable::createFromFormat('Y/m/d', $row[0])` で変換し `format('Y-m-d')` をキーとして `$this->holidays` に保存。不正行（列数不足・日付変換失敗）はスキップ。
+- **CSV パース手順**: `mb_convert_encoding($content, 'UTF-8', 'SJIS-win')` → 行分割 → ヘッダー行スキップ → 各行 `str_getcsv($line)` → `[0]` が `'YYYY/MM/DD'`・`[1]` が祝日名 → `DateTimeImmutable::createFromFormat('Y/m/d', $row[0])` で変換し `format('Y-m-d')` をキーとして `$this->holidays` に保存。不正行（列数不足・日付変換失敗）はスキップ。エンコーディングに `'SJIS'` でなく `'SJIS-win'`（Windows-31J）を指定するのは、内閣府CSVが NEC 特殊文字・IBM 拡張文字を含む MS 拡張 Shift_JIS であるため。
 - **isHoliday / holidayName**: `$key = $t->format('Y-m-d')` → `isset($this->holidays[$key])` / `$this->holidays[$key] ?? ''`
 - **holidaysBetween**: `$from` / `$to` を `'Y-m-d'` 文字列に変換し `$holidays` をループで範囲フィルタ → `Holiday` 配列を生成 → `usort()` + スペースシップ演算子で昇順ソート（HolidayJp\Provider と同一パターン）
 - **Risks**: テストフィクスチャ（Shift_JIS CSV）を git に正しく保存するため `.gitattributes` で `binary` 属性を設定する。これを忘れると `git` の自動 LF 変換で文字コードが破損する。

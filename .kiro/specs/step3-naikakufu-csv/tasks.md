@@ -15,19 +15,19 @@
   - _Requirements: 4.3_
 
 - [ ] 2. CaoCsv\Provider — コンストラクタ・CSV 読み込みの実装
-  - `src/Providers/CaoCsv/Provider.php` を新規作成し `final class Provider implements HolidayProvider` を宣言する
-  - コンストラクタ先頭で `extension_loaded('mbstring')` を確認し、未導入時は `ext-mbstring` のインストール案内メッセージ付き `ProviderException` を throw する
-  - `$csvPath` 非空時は `file_get_contents($csvPath)`、空時は内閣府固定URL（`CABINET_OFFICE_CSV_URL` 定数）から取得する（取得失敗時は `ProviderException`）
-  - `mb_convert_encoding` で Shift_JIS→UTF-8 変換後、行分割・ヘッダースキップ・`str_getcsv` パース・`DateTimeImmutable::createFromFormat('Y/m/d', ...)` で `$this->holidays` 配列に格納する（不正行はスキップ）
-  - Observable: ローカルフィクスチャを指定して `new Provider($path)` が例外なく完了し、フィクスチャ内日付で `isHoliday` が `true` を返す
+  - `HolidayProvider` インターフェースを実装した `Provider` クラスを新規作成する
+  - コンストラクタで mbstring 拡張の導入確認を行い、未導入時はインストール案内付きの例外を throw する
+  - ローカルファイルパスが指定された場合はそのファイルを、未指定の場合は内閣府の固定 URL から CSV を取得し、取得失敗時は例外を throw する
+  - 取得した Shift_JIS エンコードの CSV を UTF-8 に変換し、ヘッダー行・不正行をスキップしながら日付と祝日名のペアを内部データに格納する
+  - Observable: ローカルフィクスチャを指定してインスタンス生成が例外なく完了し、フィクスチャ内日付で `isHoliday` が `true` を返す
   - _Requirements: 1.1, 1.2, 1.3, 1.4, 1.5, 1.6, 3.1_
   - _Depends: 1.1_
 
 - [ ] 3. CaoCsv\Provider — 祝日判定メソッドの実装
-  - `isHoliday` を `isset($this->holidays[$t->format('Y-m-d')])` で実装する
-  - `holidayName` を `$this->holidays[$t->format('Y-m-d')] ?? ''` で実装する
-  - `holidaysBetween` を `$from`〜`$to` の文字列範囲フィルタ + `usort` 昇順ソートで `Holiday[]` を返す実装にする（`$from > $to` のとき空配列）
-  - Observable: フィクスチャ内の既知祝日で `isHoliday=true`・`holidayName` が祝日名・`holidaysBetween` が昇順 `Holiday[]` を返し、非祝日で `isHoliday=false`・`holidayName=''` が返る
+  - `isHoliday` を内部データへの日付照合で実装する（祝日なら `true`、非祝日なら `false`）
+  - `holidayName` を内部データへの日付照合で実装する（祝日名を返し、非祝日なら空文字を返す）
+  - `holidaysBetween` を指定期間内の祝日を昇順にソートして `Holiday[]` を返す実装にする（`$from > $to` のとき空配列を返す）
+  - Observable: フィクスチャ内の既知祝日で `isHoliday=true`・祝日名が返り・`holidaysBetween` が昇順 `Holiday[]` を返し、非祝日で `isHoliday=false`・空文字が返る
   - _Requirements: 2.1, 2.2, 2.3, 2.4, 2.5, 2.6_
   - _Depends: 2_
 
@@ -45,6 +45,7 @@
   - `csvPath` 未指定で `new Provider()` が成功し、内閣府URLから取得したデータで `isHoliday` が動作することを確認する
   - Observable: `vendor/bin/phpunit --group integration` でオンライン取得テストが PASS する
   - _Requirements: 1.3, 4.3_
+  - _Depends: 4.1_
 
 - [ ] 5. PHP 7.4・8.1 両環境での検証
   - Docker `php74` サービスで `vendor/bin/phpunit --exclude-group integration` を実行し全テスト PASS を確認する
