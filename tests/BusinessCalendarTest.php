@@ -10,6 +10,7 @@ use Heijitu\Exception\ProviderException;
 use Heijitu\Holiday;
 use Heijitu\HolidayProvider;
 use Heijitu\MonthDay;
+use Heijitu\Providers\HolidayJp\Provider;
 use PHPUnit\Framework\TestCase;
 
 final class BusinessCalendarTest extends TestCase
@@ -408,5 +409,154 @@ final class BusinessCalendarTest extends TestCase
 
         // Then: false を返す
         $this->assertFalse($calendar->isBusinessDay($date));
+    }
+
+    // -------------------------------------------------------
+    // nextBusinessDay: 金曜の翌営業日が月曜になる（週末スキップ）（要件 2.1, 2.2）
+    // -------------------------------------------------------
+
+    public function testNextBusinessDaySkipsWeekend(): void
+    {
+        // Given: 全日を非祝日とするプロバイダーで BusinessCalendar を構築する
+        $calendar = new BusinessCalendar($this->neverHolidayProvider());
+
+        // When: 金曜日（2020-01-10）の翌営業日を取得する
+        $from = new \DateTimeImmutable('2020-01-10');
+        $result = $calendar->nextBusinessDay($from);
+
+        // Then: 月曜日（2020-01-13）を返す
+        $this->assertSame('2020-01-13', $result->format('Y-m-d'));
+    }
+
+    // -------------------------------------------------------
+    // nextBusinessDay: 祝日をスキップする（要件 2.1, 2.2）
+    // -------------------------------------------------------
+
+    public function testNextBusinessDaySkipsHoliday(): void
+    {
+        // Given: HolidayJp\Provider（実プロバイダー）で BusinessCalendar を構築する
+        $calendar = new BusinessCalendar(new Provider());
+
+        // When: 2019-12-31（火）の翌営業日を取得する（1/1 は元日）
+        $from = new \DateTimeImmutable('2019-12-31');
+        $result = $calendar->nextBusinessDay($from);
+
+        // Then: 2020-01-02（木）を返す
+        $this->assertSame('2020-01-02', $result->format('Y-m-d'));
+    }
+
+    // -------------------------------------------------------
+    // nextBusinessDay: 除外日付が適用される（要件 2.3）
+    // -------------------------------------------------------
+
+    public function testNextBusinessDayWithExcludedDates(): void
+    {
+        // Given: 1/10 を除外日付として BusinessCalendar を構築する
+        $excluded = [new MonthDay(1, 10)];
+        $calendar = new BusinessCalendar($this->neverHolidayProvider(), $excluded);
+
+        // When: 2020-01-09（木）の翌営業日を取得する（1/10(金)は除外、1/11-12 は週末）
+        $from = new \DateTimeImmutable('2020-01-09');
+        $result = $calendar->nextBusinessDay($from);
+
+        // Then: 2020-01-13（月）を返す
+        $this->assertSame('2020-01-13', $result->format('Y-m-d'));
+    }
+
+    // -------------------------------------------------------
+    // firstBusinessDayOfMonth: 1日が祝日の場合の翌営業日返却（要件 3.1, 3.2）
+    // -------------------------------------------------------
+
+    public function testFirstBusinessDayOfMonthWhenFirstIsHoliday(): void
+    {
+        // Given: HolidayJp\Provider（実プロバイダー）で BusinessCalendar を構築する
+        $calendar = new BusinessCalendar(new Provider());
+
+        // When: 2020年1月の月初営業日を取得する（1/1 は元日）
+        $result = $calendar->firstBusinessDayOfMonth(2020, 1);
+
+        // Then: 2020-01-02（木）を返す
+        $this->assertSame('2020-01-02', $result->format('Y-m-d'));
+    }
+
+    // -------------------------------------------------------
+    // firstBusinessDayOfMonth: 除外日付がスキップされる（要件 3.2）
+    // -------------------------------------------------------
+
+    public function testFirstBusinessDayOfMonthWithExcludedDates(): void
+    {
+        // Given: 4/1 を除外日付として BusinessCalendar を構築する
+        $excluded = [new MonthDay(4, 1)];
+        $calendar = new BusinessCalendar($this->neverHolidayProvider(), $excluded);
+
+        // When: 2020年4月の月初営業日を取得する（4/1(水)は除外）
+        $result = $calendar->firstBusinessDayOfMonth(2020, 4);
+
+        // Then: 2020-04-02（木）を返す
+        $this->assertSame('2020-04-02', $result->format('Y-m-d'));
+    }
+
+    // -------------------------------------------------------
+    // firstBusinessDaysOfYear: 12件の配列を返す（要件 4.1）
+    // -------------------------------------------------------
+
+    public function testFirstBusinessDaysOfYearReturns12Entries(): void
+    {
+        // Given: HolidayJp\Provider（実プロバイダー）で BusinessCalendar を構築する
+        $calendar = new BusinessCalendar(new Provider());
+
+        // When: 2020年の年間月初営業日を取得する
+        $result = $calendar->firstBusinessDaysOfYear(2020);
+
+        // Then: 要素数が12であること
+        $this->assertCount(12, $result);
+
+        // Then: index 0 は1月の月初営業日（2020-01-02、1/1は元日）
+        $this->assertSame('2020-01-02', $result[0]->format('Y-m-d'));
+    }
+
+    // -------------------------------------------------------
+    // holidays: プロバイダーのデータがそのまま返る（要件 5.1）
+    // -------------------------------------------------------
+
+    public function testHolidaysReturnsProviderData(): void
+    {
+        // Given: HolidayJp\Provider（実プロバイダー）で BusinessCalendar を構築する
+        $calendar = new BusinessCalendar(new Provider());
+
+        // When: 2020-01-01〜2020-01-13 の祝日を取得する
+        $from = new \DateTimeImmutable('2020-01-01');
+        $to = new \DateTimeImmutable('2020-01-13');
+        $result = $calendar->holidays($from, $to);
+
+        // Then: 元日・成人の日の2件を含む
+        $this->assertCount(2, $result);
+        $this->assertInstanceOf(Holiday::class, $result[0]);
+        $this->assertSame('2020-01-01', $result[0]->getDate()->format('Y-m-d'));
+        $this->assertSame('元日', $result[0]->getName());
+        $this->assertInstanceOf(Holiday::class, $result[1]);
+        $this->assertSame('2020-01-13', $result[1]->getDate()->format('Y-m-d'));
+        $this->assertSame('成人の日', $result[1]->getName());
+    }
+
+    // -------------------------------------------------------
+    // holidays: 除外日付はフィルタされない（要件 5.2）
+    // -------------------------------------------------------
+
+    public function testHolidaysIgnoresExcludedDates(): void
+    {
+        // Given: 1/1 を除外日付として、HolidayJp\Provider で BusinessCalendar を構築する
+        $excluded = [new MonthDay(1, 1)];
+        $calendar = new BusinessCalendar(new Provider(), $excluded);
+
+        // When: 2020-01-01〜2020-01-13 の祝日を取得する
+        $from = new \DateTimeImmutable('2020-01-01');
+        $to = new \DateTimeImmutable('2020-01-13');
+        $result = $calendar->holidays($from, $to);
+
+        // Then: 除外設定に関わらず元日が含まれる（除外日付は holidays() に影響しない）
+        $this->assertCount(2, $result);
+        $this->assertSame('2020-01-01', $result[0]->getDate()->format('Y-m-d'));
+        $this->assertSame('元日', $result[0]->getName());
     }
 }
