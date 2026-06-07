@@ -160,6 +160,7 @@ jj new
 /commit-push-pr-update
 /review 2
 
+要修正と注意事項を修正してください
 
 
 

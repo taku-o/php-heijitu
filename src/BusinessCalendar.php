@@ -132,6 +132,8 @@ final class BusinessCalendar
     /**
      * 候補日から最初の営業日を見つけて返す
      *
+     * プロバイダーのデータ範囲外（例: 2050年超）を起点とすると営業日が見つからず無限ループになる。
+     *
      * @throws \Heijitu\Exception\ProviderException プロバイダーからの例外をそのまま伝播
      */
     private function findBusinessDayFrom(\DateTimeImmutable $candidate): \DateTimeImmutable

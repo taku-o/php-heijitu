@@ -8,7 +8,6 @@ use Heijitu\Exception\ProviderException;
 use Heijitu\Holiday;
 use Heijitu\HolidayProvider;
 use HolidayJp\HolidayJp;
-use HolidayJp\HolidayJp\Holidays;
 
 final class Provider implements HolidayProvider
 {
@@ -28,7 +27,8 @@ final class Provider implements HolidayProvider
 
     public function holidayName(\DateTimeImmutable $t): string
     {
-        return Holidays::$holidays[$t->format('Y-m-d')]['name'] ?? '';
+        $entries = HolidayJp::between($this->toMutableDate($t), $this->toMutableDate($t));
+        return !empty($entries) ? $entries[0]['name'] : '';
     }
 
     public function holidaysBetween(\DateTimeImmutable $from, \DateTimeImmutable $to): array
