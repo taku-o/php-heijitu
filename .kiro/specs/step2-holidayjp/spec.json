@@ -2,7 +2,7 @@
   "feature": "step2-holidayjp",
   "title": "Step 2: holidayjp プロバイダー + 残り全 API 実装",
   "language": "ja",
-  "phase": "requirements-generated",
+  "phase": "design-generated",
   "approvals": {
     "requirements": {
       "generated": true,
@@ -10,8 +10,9 @@
       "generated_at": "2026-06-07"
     },
     "design": {
-      "generated": false,
-      "approved": false
+      "generated": true,
+      "approved": true,
+      "generated_at": "2026-06-07"
     },
     "tasks": {
       "generated": false,

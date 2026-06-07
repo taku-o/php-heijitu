@@ -46,5 +46,29 @@ jj new
 
 -------------
 
+/kiro-spec-design step2-holidayjp
+/kiro-validate-design step2-holidayjp
+
+対応してください。推奨の方法を選択
+  観察 1: BusinessCalendarTest 追記テストの日付が未指定
+  - Concern: テスト表に「祝日前日 → 祝日翌日」「1月1日が元日 →
+  翌営業日」と書かれているが、具体的な日付が記載されていない。holiday-jp/holiday_jp のデータ範囲は 2020
+  年で終わるため、実装者が 2021 年以降の日付を選ぶと期待外れの結果になる可能性がある。
+  - Impact: テスト実装の誤りのリスク（軽微。設計の実行可能性に影響なし）
+  - Suggestion: テスト表に使用日付の例を追記する（例: testNextBusinessDaySkipsHoliday → 2019-12-31
+  を入力、期待値 2020-01-02）。または実装タスクの Notes に「2020 年以前の祝日を使うこと」と明記する。
+  - Traceability: 6.1, 6.2
+  - Evidence: Testing Strategy — tests/BusinessCalendarTest.php 追記テスト表
+
+  観察 2: シーケンス図が isBusinessDay の全チェックを省略
+  - nextBusinessDay のシーケンス図は isHoliday(candidate) のみ描画しており、週末チェック・除外日付チェッ
+  クを省略している。図の読者に誤解を与える可能性がある（軽微）。
+  - Traceability: 2.1〜2.3 / Evidence: System Flows — nextBusinessDay フロー図
+
+/kiro-approve-design step2-holidayjp
+jj new
+
+-------------
+
 
 
