@@ -335,7 +335,7 @@ public function holidays(\DateTimeImmutable $from, \DateTimeImmutable $to): arra
 
 | メソッド | 起点 | ループ条件 | 戻り値 |
 |---------|------|-----------|--------|
-| `nextBusinessDay($from)` | `$from->modify('+1 day')` | `!isBusinessDay($candidate)` | 最初の営業日 |
+| `nextBusinessDay($from)` | `new DateTimeImmutable($from->format('Y-m-d'), $tz)->modify('+1 day')` | `!isBusinessDay($candidate)` | 最初の営業日 |
 | `firstBusinessDayOfMonth($y, $m)` | `new DateTimeImmutable("$y-$m-01", $tz)` | `!isBusinessDay($candidate)` | 最初の営業日 |
 | `firstBusinessDaysOfYear($y)` | — | — | `firstBusinessDayOfMonth` × 12 |
 | `holidays($from, $to)` | — | — | `$this->provider->holidaysBetween($from, $to)` |

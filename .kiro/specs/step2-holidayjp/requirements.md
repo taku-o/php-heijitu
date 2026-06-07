@@ -13,7 +13,7 @@ Step 1 で実装済みの `isBusinessDay()` とコア型・インターフェー
 - **In scope**:
   - `Providers/HolidayJp/Provider.php` — `holiday-jp/holiday_jp` を使った `HolidayProvider` 実装
   - `BusinessCalendar` への残り API 追加（`nextBusinessDay` / `firstBusinessDayOfMonth` / `firstBusinessDaysOfYear` / `holidays`）
-  - ライブラリが内部生成する日付のタイムゾーン処理（実行環境デフォルト TZ / フォールバック `Asia/Tokyo`）
+  - ライブラリが内部生成する日付のタイムゾーン処理（実行環境デフォルト TZ: `date_default_timezone_get()`）
   - `holiday-jp/holiday_jp` の `composer require-dev` への追加
   - `HolidayJp\Provider` のユニットテスト
   - `BusinessCalendar` 残り API のテスト（holidayjp ベース・モックプロバイダー含む）

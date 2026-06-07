@@ -96,14 +96,11 @@ jj new
   │        │ にする
 
 jj new
-
-
-
 !jj-merge feature/step2-holidayjp
 /commit-commands:commit-push-pr
+/review 2
 
-/review 1
-
+要修正と注意事項で上げられた項目を修正してください。
 
 /commit-push-pr-update
 

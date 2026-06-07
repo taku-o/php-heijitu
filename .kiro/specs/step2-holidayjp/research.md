@@ -106,16 +106,19 @@ public static $holidays = [
 | `BusinessCalendar::firstBusinessDaysOfYear()` | 新規追加 | `firstBusinessDayOfMonth()` を 12 回呼び出す |
 | `BusinessCalendar::holidays()` | 新規追加 | `$this->provider->holidaysBetween()` を返すだけ |
 | 依存未導入時の `ProviderException` | オプション | `class_exists(\HolidayJp\HolidayJp::class)` を確認して投げる |
-| タイムゾーン: 内部生成日付 | 制約 | `date_default_timezone_get()` の空文字判定 → `'Asia/Tokyo'` フォールバック |
+| タイムゾーン: 内部生成日付 | 制約 | `date_default_timezone_get()` で実行環境デフォルト TZ を取得（`nextBusinessDay` / `firstBusinessDayOfMonth` 共通。A-1・B-1 決定により `Asia/Tokyo` フォールバックは廃止） |
 
 ### 2.3 タイムゾーン処理の詳細
 
-`nextBusinessDay` では `$from->modify('+1 day')` が `$from` 自身の TZ を引き継ぐ（追加処理不要）。
+> **⚠️ 注意（設計確定後の変更）**: 以下の調査内容は A-1（`Asia/Tokyo` フォールバック削除）および B-1（`nextBusinessDay` も実行環境 TZ を使用）の決定により一部変更済み。実装時は design.md / tasks.md の記述を参照すること。
 
-`firstBusinessDayOfMonth` では年・月から日付を内部生成するため、デフォルト TZ を取得して `DateTimeZone` を指定する必要がある:
+~~`nextBusinessDay` では `$from->modify('+1 day')` が `$from` 自身の TZ を引き継ぐ（追加処理不要）。~~
+
+`nextBusinessDay` / `firstBusinessDayOfMonth` ともに `date_default_timezone_get()` で実行環境 TZ を取得して候補日付を生成する:
 
 ```php
-$tz = date_default_timezone_get() ?: 'Asia/Tokyo';
+// 確定した実装方針（Asia/Tokyo フォールバックなし）
+$tz = date_default_timezone_get();
 $date = new \DateTimeImmutable(sprintf('%04d-%02d-01', $year, $month), new \DateTimeZone($tz));
 ```
 
@@ -185,7 +188,7 @@ $mutable = new \DateTime($t->format('Y-m-d'));
 2. **ディレクトリ構成**: `src/Providers/HolidayJp/Provider.php` を新規作成。`Heijitu\Providers\HolidayJp\Provider` 名前空間。
 3. **`DateTime` 変換**: `new \DateTime($t->format('Y-m-d'))` パターンを `HolidayJp\Provider` 内に閉じ込める。
 4. **`holidaysBetween()` のソート**: `between()` の結果は静的データの挿入順（昇順）だが、確実性のため `usort()` でソートを明示する。
-5. **TZ フォールバック**: `firstBusinessDayOfMonth` の内部日付生成で `date_default_timezone_get() ?: 'Asia/Tokyo'` を使用。
+5. **TZ 処理**: `nextBusinessDay` / `firstBusinessDayOfMonth` ともに `date_default_timezone_get()` のみを使用（`Asia/Tokyo` フォールバックは廃止。A-1・B-1 決定）。
 6. **テスト日付の選択**: 2020 年以前の既知祝日（例: `2020-01-01` 元日）を使用し、ライブラリのデータ範囲外を避ける。
 7. **依存未導入検出**: `class_exists(\HolidayJp\HolidayJp::class)` をコンストラクタで確認して `ProviderException` を投げる実装を「可能なら実施」として設計に含める。
 
