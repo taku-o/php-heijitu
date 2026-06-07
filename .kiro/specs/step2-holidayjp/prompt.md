@@ -106,4 +106,12 @@ jj new
 
 -------------
 
+takt --task "/kiro-impl step2-holidayjp 1
+必要ならテストを修正して良い。"
+
+/kiro-review-feature step2-holidayjp 1
+必要ならテストを修正して良い。
+
+jj new
+
 

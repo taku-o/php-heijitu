@@ -1,7 +1,7 @@
 # Implementation Plan
 
-- [ ] 1. (P) HolidayJp プロバイダーの実装
-- [ ] 1.1 Provider クラスの骨格を作成し、依存未導入時の検出を実装する
+- [x] 1. (P) HolidayJp プロバイダーの実装
+- [x] 1.1 Provider クラスの骨格を作成し、依存未導入時の検出を実装する
   - `src/Providers/HolidayJp/Provider.php` を新規作成し、名前空間 `Heijitu\Providers\HolidayJp` を宣言する
   - `final class Provider implements HolidayProvider` を宣言し、インターフェースの 3 メソッドスタブを配置する
   - コンストラクタで `class_exists(\HolidayJp\HolidayJp::class)` を確認し、false の場合は `ProviderException` を throw する
@@ -9,7 +9,7 @@
   - _Requirements: 1.1, 1.8_
   - _Boundary: HolidayJp\Provider_
 
-- [ ] 1.2 isHoliday と holidayName を実装する
+- [x] 1.2 isHoliday と holidayName を実装する
   - `isHoliday(\DateTimeImmutable $t): bool` — `new \DateTime($t->format('Y-m-d'))` に変換して `\HolidayJp\HolidayJp::isHoliday()` に委譲する
   - `holidayName(\DateTimeImmutable $t): string` — `\HolidayJp\HolidayJp\Holidays::$holidays[$t->format('Y-m-d')]['name'] ?? ''` でキー `Y-m-d` 形式を直接参照する
   - 既知祝日（`2020-01-01`）で `isHoliday` が `true` を、非祝日（`2020-01-02`）で `false` を返す
@@ -17,7 +17,7 @@
   - _Requirements: 1.2, 1.3, 1.4, 1.5_
   - _Boundary: HolidayJp\Provider_
 
-- [ ] 1.3 holidaysBetween を実装する
+- [x] 1.3 holidaysBetween を実装する
   - `holidaysBetween(\DateTimeImmutable $from, \DateTimeImmutable $to): array` — `\HolidayJp\HolidayJp::between()` に変換後の `\DateTime` を渡して実行する
   - 戻り値の各要素の `$entry['date']`（`DateTime`）を `\DateTimeImmutable::createFromMutable()` で変換して `Holiday` オブジェクトを構築する
   - `usort()` で日付昇順ソートを明示的に適用する
