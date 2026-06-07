@@ -75,8 +75,8 @@ final class BusinessCalendar
      */
     public function nextBusinessDay(\DateTimeImmutable $from): \DateTimeImmutable
     {
-        $candidate = new \DateTimeImmutable($from->format('Y-m-d'), $this->defaultTimezone());
-        $candidate = $candidate->modify('+1 day');
+        $candidate = (new \DateTimeImmutable($from->format('Y-m-d'), $this->defaultTimezone()))
+            ->modify('+1 day');
 
         return $this->findBusinessDayFrom($candidate);
     }
@@ -153,6 +153,7 @@ final class BusinessCalendar
      */
     private function findBusinessDayFrom(\DateTimeImmutable $candidate): \DateTimeImmutable
     {
+        $start = $candidate;
         for ($i = 0; $i < 31; $i++) {
             if ($this->isBusinessDay($candidate)) {
                 return $candidate;
@@ -161,7 +162,7 @@ final class BusinessCalendar
         }
 
         throw new \RuntimeException(
-            sprintf('No business day found within 31 days from %s', $candidate->format('Y-m-d'))
+            sprintf('No business day found within 31 days from %s', $start->format('Y-m-d'))
         );
     }
 

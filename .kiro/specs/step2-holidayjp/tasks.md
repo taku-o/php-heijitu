@@ -26,8 +26,8 @@
   - _Requirements: 1.6, 1.7_
   - _Boundary: HolidayJp\Provider_
 
-- [ ] 2. (P) BusinessCalendar 残り API の実装
-- [ ] 2.1 nextBusinessDay を実装する
+- [x] 2. (P) BusinessCalendar 残り API の実装
+- [x] 2.1 nextBusinessDay を実装する
   - `nextBusinessDay(\DateTimeImmutable $from): \DateTimeImmutable` を `BusinessCalendar` に追加する
   - `date_default_timezone_get()` で TZ を取得し `new \DateTimeZone($tz)` を生成する
   - `new \DateTimeImmutable($from->format('Y-m-d'), $tz)->modify('+1 day')` を起点に `isBusinessDay($candidate)` が true になるまで 1 日ずつ前進させる
@@ -37,7 +37,7 @@
   - _Requirements: 2.1, 2.2, 2.3, 2.4, 2.5_
   - _Boundary: BusinessCalendar_
 
-- [ ] 2.2 firstBusinessDayOfMonth を実装する
+- [x] 2.2 firstBusinessDayOfMonth を実装する
   - `firstBusinessDayOfMonth(int $year, int $month): \DateTimeImmutable` を追加する
   - `date_default_timezone_get()` で TZ を取得し `new \DateTimeZone($tz)` を生成する
   - `new \DateTimeImmutable(sprintf('%04d-%02d-01', $year, $month), $tz)` を起点に `isBusinessDay()` でループする
@@ -47,7 +47,7 @@
   - _Requirements: 3.1, 3.2, 3.3, 3.4_
   - _Boundary: BusinessCalendar_
 
-- [ ] 2.3 firstBusinessDaysOfYear を実装する
+- [x] 2.3 firstBusinessDaysOfYear を実装する
   - `firstBusinessDaysOfYear(int $year): array` を追加し、`firstBusinessDayOfMonth` を 1〜12 月で呼び出す
   - 戻り値は必ず 12 件の `\DateTimeImmutable[]`（index 0 = 1月、index 11 = 12月）
   - プロバイダーが例外を throw した場合はそのまま伝播する
@@ -55,7 +55,7 @@
   - _Requirements: 4.1, 4.2, 4.3_
   - _Boundary: BusinessCalendar_
 
-- [ ] 2.4 holidays を実装する
+- [x] 2.4 holidays を実装する
   - `holidays(\DateTimeImmutable $from, \DateTimeImmutable $to): array` を追加する
   - `return $this->provider->holidaysBetween($from, $to)` のみで実装する（変換・フィルタなし）
   - コンストラクタの `excludedDates` はこの API に影響しない
