@@ -20,17 +20,24 @@
   - _Depends: 1.1_
 
 - [ ] 3. API 通信ロジック（buildService・fetchEvents）の実装
-- [ ] 3.1 buildService と fetchEvents の実装
-  - `fetchEvents(\DateTimeImmutable $from, \DateTimeImmutable $to): array` を実装する（`array<string, string>` 型を返す）
-  - `fetchEvents()` 内部で `buildService()` を呼び、`Google\Service\Calendar` を取得する
-  - `buildService()`: `$credentialsFile` が非空なら `setAuthConfig($this->credentialsFile)` + `addScope(\Google\Service\Calendar::CALENDAR_READONLY)`、そうでなければ `setDeveloperKey($this->apiKey)` で認証設定を行い `new \Google\Service\Calendar($client)` を返す（戻り値型は `object`）
-  - `events->listEvents()` を API パラメータ `singleEvents=true`・`orderBy=startTime`・`maxResults=2500`・`timeMin`・`timeMax` で呼び出す（`timeMin = $from->setTime(0,0,0)->format('c')`、`timeMax = $to->modify('+1 day')->setTime(0,0,0)->format('c')`）
-  - `getNextPageToken()` が空になるまでページングループを実行し、全件を収集する
-  - `$event->getStart()->getDate() !== null` の終日イベントのみを `['YYYY-MM-DD' => 祝日名]` の配列に格納して返す
-  - `buildService()` および `listEvents()` の呼び出しを try/catch で囲み、例外を元例外を `$previous` とした `ProviderException` に変換する
-  - Observable: `php -l src/Providers/GoogleCalendar/Provider.php` が通り、`php74`・`php81` 両環境でクラスが型エラーなくオートロードされる
-  - _Requirements: 1.2, 1.3, 1.4, 1.5, 2.1, 2.2, 2.3_
+- [ ] 3.1 buildService の実装（認証クライアント初期化）
+  - `buildService()` を実装する（戻り値型は `object`）
+  - `$credentialsFile` が非空なら `setAuthConfig` + `addScope(CALENDAR_READONLY)` でサービスアカウント認証を設定し、そうでなければ `setDeveloperKey($this->apiKey)` で API キー認証を設定する
+  - `Google\Service\Calendar` インスタンスを返す
+  - Observable: ダミー API キーで `buildService()` が例外なく `object` 型を返す（ネットワーク接続なし）
+  - _Requirements: 2.1, 2.2, 2.3_
   - _Depends: 2.1_
+
+- [ ] 3.2 fetchEvents の実装（API呼び出し・ページング・フィルタリング）
+  - `fetchEvents(\DateTimeImmutable $from, \DateTimeImmutable $to): array` を実装する
+  - `fetchEvents()` 内部で `buildService()` を呼んで Calendar サービスを取得する
+  - `events->listEvents()` を `singleEvents=true`・`orderBy=startTime`・`maxResults=2500`・`timeMin`（`$from` の 0 時 0 分 0 秒）・`timeMax`（`$to` の翌日 0 時 0 分 0 秒）で呼び出す
+  - `getNextPageToken()` が空になるまでページングループを実行し、全件を収集する
+  - `start->getDate() !== null` の終日イベントのみを `['YYYY-MM-DD' => 祝日名]` の形式で返す
+  - `buildService()` および `listEvents()` の両方を try/catch で囲み、例外を元例外を `$previous` とした `ProviderException` に変換する
+  - Observable: `php -l src/Providers/GoogleCalendar/Provider.php` が通り、`php74`・`php81` 両環境でクラスが型エラーなくオートロードされる
+  - _Requirements: 1.2, 1.3, 1.4, 1.5_
+  - _Depends: 3.1_
 
 - [ ] 4. 祝日判定メソッドの実装
 - [ ] 4.1 isHoliday / holidayName / holidaysBetween の実装
@@ -39,7 +46,7 @@
   - `holidaysBetween(\DateTimeImmutable $from, \DateTimeImmutable $to): array` を実装する（`$from > $to` のとき API を呼ばず空配列を早期リターン。`fetchEvents($from, $to)` の結果から `Holiday[]` を構築し `usort()` で昇順ソートして返す。CaoCsv\Provider と同一のソートパターン）
   - Observable: `php -l` が通り、`$from > $to` の `holidaysBetween` が例外なく空配列を返す（integration テストで追加検証）
   - _Requirements: 3.1, 3.2, 3.3, 3.4, 3.5, 3.6_
-  - _Depends: 3.1_
+  - _Depends: 3.2_
 
 - [ ] 5. テストの実装
 
@@ -61,7 +68,7 @@
   - `Holiday::getDate()` が `DateTimeImmutable` であることを検証する
   - Observable: `GOOGLE_API_KEY` 環境変数を設定した状態で `vendor/bin/phpunit --group integration` が全件 PASS する
   - _Requirements: 3.1, 3.2, 3.3, 3.4, 3.5, 5.2, 5.5_
-  - _Depends: 5.1_
+  - _Depends: 5.1, 4.1_
 
 - [ ] 6. PHP 7.4・8.1 両環境での検証
 - [ ] 6.1 Docker 両バージョンでのテスト通過確認

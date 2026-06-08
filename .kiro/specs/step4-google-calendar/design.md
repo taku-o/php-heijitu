@@ -128,7 +128,7 @@ tests/
 
 ### Modified Files
 
-- `composer.json` — `require-dev` に `"google/apiclient": "~2.16.0"` を追加（Step 4 で実施済み）
+- `composer.json` — `require-dev` に `"google/apiclient": "~2.16.0"` を追加（Step 4 で実施）
 
 ---
 
@@ -295,7 +295,7 @@ final class Provider implements HolidayProvider
 
 - **コンストラクタ**: `class_exists(\Google\Client::class)` でライブラリ導入確認 → 未導入なら `ProviderException`。`$apiKey` と `$credentialsFile` が両方空なら `ProviderException`。それ以外はプロパティに保存するのみ。
 - **buildService()**: `credentialsFile` が非空なら `$client->setAuthConfig($this->credentialsFile)` + `$client->addScope(\Google\Service\Calendar::CALENDAR_READONLY)`。そうでなければ `$client->setDeveloperKey($this->apiKey)`。`new \Google\Service\Calendar($client)` を返す。
-- **fetchEvents()**: 内部で `buildService()` を呼びクライアントを初期化する（public メソッドは `$this->fetchEvents(...)` のみを呼ぶ。`buildService()` と API 呼び出しの両方のエラーをこの1箇所の try/catch で `ProviderException` に変換する）。`timeMin` = `$from->setTime(0, 0, 0)->format('c')`、`timeMax` = `$to->modify('+1 day')->setTime(0, 0, 0)->format('c')`。API パラメータ: `singleEvents=true`、`orderBy=startTime`、`maxResults=2500`。`getNextPageToken()` が空になるまでループ。`$event->getStart()->getDate() !== null` の終日イベントのみ対象。
+- **fetchEvents()**: 内部で `buildService()` を呼びクライアントを初期化する（public メソッドは `$this->fetchEvents(...)` のみを呼ぶ。`buildService()` と API 呼び出しの両方のエラーをこの1箇所の try/catch で `ProviderException` に変換する）。`timeMin` = `$from->setTime(0, 0, 0)->format('c')`、`timeMax` = `$to->modify('+1 day')->setTime(0, 0, 0)->format('c')`。API パラメータ: `singleEvents=true`、`orderBy=startTime`、`maxResults=2500`（日本の年間祝日数は約 16〜20 件のため、数十年分を一括取得するのに十分な値）。`getNextPageToken()` が空になるまでループ。`$event->getStart()->getDate() !== null` の終日イベントのみ対象。
 - **isHoliday / holidayName**: `$events = $this->fetchEvents($t, $t)` → `$key = $t->format('Y-m-d')` → `isset($events[$key])` / `$events[$key] ?? ''`
 - **holidaysBetween**: `$from > $to` のときアーリーリターン（空配列）。`$events = $this->fetchEvents($from, $to)` → `Holiday[]` を構築 → `usort()` で昇順ソート（他プロバイダーと同一パターン）。
 - **PHP 8.1 deprecation 警告**: `google/apiclient` v2.16.x は PHP 8.1 で Deprecated Notice（暗黙的 nullable 等）を出すが、機能に影響はない。既知制約として受け入れる（decisions.md D-4 参照）。
@@ -332,7 +332,6 @@ final class Provider implements HolidayProvider
 4. **API キー認証での holidayName** — 祝日で名前を、非祝日で空文字を返すことを確認（3.3, 3.4）
 5. **API キー認証での holidaysBetween** — 指定範囲の祝日を `Holiday[]` 昇順で返すことを確認（3.5, 3.6）
 6. **ページング確認** — 複数ページが存在するほど広い期間で全件取得できることを確認（1.3）
-7. **credentialsFile 認証**（ファイル存在時のみ） — `GOOGLE_CREDENTIALS_FILE` 使用時にも同様の結果を返すことを確認（2.2, 2.3）
 
 ### PHP バージョン確認
 
@@ -342,6 +341,6 @@ final class Provider implements HolidayProvider
 
 ## Security Considerations
 
-- API キーは `$this->apiKey` プロパティに保存されるが、PHPDoc や `__toString` 等でログに出力されないようにする。
+- 認証情報（API キー・資格情報ファイルパス）はプロパティに保存される。ログ・デバッグ出力への認証情報の露出を防ぐこと。
 - サービスアカウントの JSON キーファイルはファイルシステム上に存在するため、利用者はファイルのパーミッション管理（webサーバーから読めないよう制限）の責任を持つ。これはライブラリの制御外。
 - `credentialsFile` が存在しないパスを指定した場合、`google/apiclient` 内部でエラーが発生するため、`buildService()` の try/catch で `ProviderException` に変換する。

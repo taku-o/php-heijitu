@@ -20,10 +20,9 @@ go-heijitu では環境変数からキーを読み込む設計だったが、php
   - Google の日本祝日カレンダーからの全件取得（ページング対応）
   - `isHoliday` / `holidayName` / `holidaysBetween` の実装
   - 資格情報未設定時（`apiKey`・`credentialsFile` 両方空）の `ProviderException`
-  - `google/apiclient` 未導入時の `ProviderException` 検出と案内（可能なら実施）
+  - `google/apiclient` 未導入時の `ProviderException` 検出と案内
   - `Providers/GoogleCalendar/ProviderTest` のユニットテスト（integration グループ分離を含む）
   - PHP 7.4・8.1 両環境でのオートロード・型エラーなし確認
-  - （可能なら）PHP 8.1 上での `google/apiclient` 実機検証（decisions.md D-4）
 
 - **Out of scope**:
   - `BusinessCalendar` の API・実装変更
@@ -38,7 +37,6 @@ go-heijitu では環境変数からキーを読み込む設計だったが、php
   - `HolidayProvider` インターフェースは Step 1 で定義済み。本ステップはその実装を提供する。
   - `BusinessCalendar` は Step 2 で完成済み。`GoogleCalendar\Provider` を `BusinessCalendar` コンストラクタに渡して利用する。
   - `google/apiclient:^2.16` は `composer.json` の `require-dev` に追加済み（Step 1 で方針確定）。利用者は使う場合に自分で `suggest` から取り込む。
-  - PHP 8.1 上での `google/apiclient` 動作確認は「可能なら実施・無理ならスキップ可」（decisions.md D-4）。
 
 ---
 
@@ -67,7 +65,7 @@ go-heijitu では環境変数からキーを読み込む設計だったが、php
 1. When `GoogleCalendar\Provider` is instantiated with an `apiKey` parameter, the php-heijitu ライブラリ shall authenticate to the Google Calendar API using that API key.
 2. When `GoogleCalendar\Provider` is instantiated with a `credentialsFile` parameter pointing to a service account JSON file, the php-heijitu ライブラリ shall authenticate using that service account.
 3. When both `apiKey` and `credentialsFile` are provided, the php-heijitu ライブラリ shall use `credentialsFile`（サービスアカウント認証）を優先する.
-4. If neither `apiKey` nor `credentialsFile` is provided（どちらも空または未指定）when instantiating `GoogleCalendar\Provider`, the php-heijitu ライブラリ shall throw a `ProviderException` at construction time.
+4. If neither `apiKey` nor `credentialsFile` is provided（どちらも空または未指定）when instantiating `GoogleCalendar\Provider`, the php-heijitu ライブラリ shall throw a `ProviderException` at construction time with a message that guides the user to provide either `apiKey` or `credentialsFile`.
 5. The php-heijitu ライブラリ shall accept credentials as constructor arguments（ライブラリ自身は環境変数を直接読み込まない）. 資格情報の取得元（環境変数・設定ファイル等）は呼び出し側の責任とする.
 
 ---
@@ -107,4 +105,4 @@ go-heijitu では環境変数からキーを読み込む設計だったが、php
 2. Tests that require actual Google Calendar API access（実 API 呼び出しを伴うテスト）shall be annotated with `@group integration` and shall not run during normal `phpunit` execution.
 3. When the test suite is executed（integration グループを除く）, the php-heijitu プロジェクト shall produce no failures on PHP 7.4 and PHP 8.1.
 4. The php-heijitu プロジェクト shall load `GoogleCalendar\Provider` without autoload errors or type errors on both PHP 7.4 and PHP 8.1.
-5. When running integration tests, the php-heijitu プロジェクト shall read API credentials from environment variables（`GOOGLE_API_KEY` または `GOOGLE_CREDENTIALS_FILE`）and pass them to `GoogleCalendar\Provider`. 開発者はこれらの環境変数を設定することで実 API 検証テストを実行できる.
+5. When running integration tests, the php-heijitu プロジェクト shall read API credentials from environment variables（`GOOGLE_API_KEY` → `$apiKey`、`GOOGLE_CREDENTIALS_FILE` → `$credentialsFile`）and pass them to `GoogleCalendar\Provider`. 開発者はこれらの環境変数を設定することで実 API 検証テストを実行できる.

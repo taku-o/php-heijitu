@@ -111,6 +111,25 @@ jj new
 jj new
 
 /kiro-review-spec step4-google-calendar
+
+
+credentialsFile認証テストは削除。
+>  1. [要確認] credentialsFile 認証テストの扱い（design.md Testing Strategy #7 と tasks.md の不整合）
+>    - Task 5.2 に credentialsFile 認証テストを追加するか、design.md から削除するか決定してください
+
+許可。
+>  2. [削除推奨] 曖昧コミットメント表現
+>    - requirements.md Boundary Context の「可能なら実施」「（可能なら）」を削除してください
+
+分割してください。
+>  3. [任意] Task 3.1 の粒度分割 — 実装中に 3.1/3.2 に分割することを検討
+
+軽微な問題（推奨改善）であげられた項目は修正してください。
+
+対応お願いします
+  1. Task 6.1 では php81 Docker での全テスト通過確認が 必須タスクObservable
+  付き）として定義されており、実態と矛盾する。この1行は削除が推奨。
+
 jj new
 
 !jj-merge feature/step4-google-calendar
