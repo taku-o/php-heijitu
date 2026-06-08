@@ -49,7 +49,7 @@ go-heijitu では環境変数からキーを読み込む設計だったが、php
 #### Acceptance Criteria
 
 1. The php-heijitu ライブラリ shall provide a `GoogleCalendar\Provider` class that implements the `HolidayProvider` interface.
-2. When `GoogleCalendar\Provider` is instantiated, the php-heijitu ライブラリ shall connect to Google の日本祝日カレンダー（固定の Calendar ID）から祝日データを取得する。
+2. When `isHoliday`, `holidayName`, or `holidaysBetween` is called on `GoogleCalendar\Provider`, the php-heijitu ライブラリ shall fetch holiday data from Google の日本祝日カレンダー（固定の Calendar ID）.
 3. The php-heijitu ライブラリ shall retrieve all holidays from the calendar without limiting to a single page of results（ページングがある場合は全件取得する）.
 4. When holiday data is successfully fetched from the Google Calendar API, the php-heijitu ライブラリ shall make that data available for `isHoliday`, `holidayName`, and `holidaysBetween` queries.
 5. If the Google Calendar API returns an error during data retrieval, the php-heijitu ライブラリ shall throw a `ProviderException`.

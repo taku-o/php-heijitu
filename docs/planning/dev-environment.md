@@ -124,7 +124,7 @@ docker compose -f docker/compose.yaml run --rm php74 php examples/main.php
 
 ---
 
-## 9. integration テスト用の資格情報（`.env` ファイル）
+## 8. integration テスト用の資格情報（`.env` ファイル）
 
 Google Calendar プロバイダー（Step 4）の integration テストを実行するには、APIキーまたはサービスアカウントの資格情報が必要。
 
@@ -154,7 +154,7 @@ docker compose -f docker/compose.yaml run --rm php81 vendor/bin/phpunit --group 
 
 ---
 
-## 8. 作成タイミングと workplan との関係
+## 9. 作成タイミングと workplan との関係
 
 - 本構成の実ファイル（`docker/Dockerfile`・`docker/compose.yaml`）は **Step 1（プロジェクト初期化）着手時に用意**する。
 - `composer.json` 作成・`composer install`・PHPUnit 実行は、いずれも本 Docker 環境上で行う。

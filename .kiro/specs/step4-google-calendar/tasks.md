@@ -80,3 +80,6 @@
   - _Depends: 5.1_
 
 ## Implementation Notes
+
+- `composer.json` の `google/apiclient` は `~2.16.0` に固定すること。`^2.16` に変更すると v2.17+ が解決され PHP 7.4 互換が壊れる（research.md 制約 1 参照）。
+- PHP 8.1 環境で `google/apiclient` v2.16.x が出す Deprecated Notice（暗黙的 nullable 等）は既知制約として許容する。fatal error・型エラーがなければ合格とする（decisions.md D-4 参照）。

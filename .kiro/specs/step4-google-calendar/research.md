@@ -51,10 +51,10 @@ final class Provider implements HolidayProvider
 ```json
 "require-dev": {
     ...,
-    "google/apiclient": "^2.16"   // ← 要修正
+    "google/apiclient": "~2.16.0"   // Step 4 で修正済み（^2.16 → ~2.16.0）
 },
 "suggest": {
-    "google/apiclient": "GoogleCalendar用 (^2.16)"  // ← 要修正
+    "google/apiclient": "GoogleCalendar用 (~2.16.0)"  // Step 4 で修正済み
 }
 ```
 

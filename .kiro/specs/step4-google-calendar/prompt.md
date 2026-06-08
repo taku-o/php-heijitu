@@ -136,6 +136,7 @@ jj new
 /commit-commands:commit-push-pr
 /review 4
 
+修正推奨事項に挙げられた項目を修正してください。
 
 
 
