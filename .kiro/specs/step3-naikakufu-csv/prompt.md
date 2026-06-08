@@ -148,6 +148,8 @@ jj new
 /commit-push-pr-update
 /review 3
 
+.claude/rules/development-style.mdをgitから削除して。
+
 要修正と注意事項を修正してください
 
 
