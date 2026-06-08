@@ -23,7 +23,7 @@
   - _Requirements: 1.1, 1.2, 1.3, 1.4, 1.5, 1.6, 3.1_
   - _Depends: 1.1_
 
-- [ ] 3. CaoCsv\Provider — 祝日判定メソッドの実装
+- [x] 3. CaoCsv\Provider — 祝日判定メソッドの実装
   - `isHoliday` を内部データへの日付照合で実装する（祝日なら `true`、非祝日なら `false`）
   - `holidayName` を内部データへの日付照合で実装する（祝日名を返し、非祝日なら空文字を返す）
   - `holidaysBetween` を指定期間内の祝日を昇順にソートして `Holiday[]` を返す実装にする（`$from > $to` のとき空配列を返す）

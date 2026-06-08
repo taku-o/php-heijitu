@@ -33,14 +33,12 @@ final class Provider implements HolidayProvider
 
     public function isHoliday(\DateTimeImmutable $t): bool
     {
-        $key = $t->format('Y-m-d');
-        return isset($this->holidays[$key]);
+        return isset($this->holidays[$this->dateKey($t)]);
     }
 
     public function holidayName(\DateTimeImmutable $t): string
     {
-        $key = $t->format('Y-m-d');
-        return $this->holidays[$key] ?? '';
+        return $this->holidays[$this->dateKey($t)] ?? '';
     }
 
     /** @return Holiday[] */
@@ -50,13 +48,13 @@ final class Provider implements HolidayProvider
             return [];
         }
 
-        $fromKey = $from->format('Y-m-d');
-        $toKey = $to->format('Y-m-d');
+        $fromKey = $this->dateKey($from);
+        $toKey = $this->dateKey($to);
 
         $holidays = [];
         foreach ($this->holidays as $dateKey => $name) {
             if ($dateKey >= $fromKey && $dateKey <= $toKey) {
-                $date = \DateTimeImmutable::createFromFormat('Y-m-d', $dateKey);
+                $date = new \DateTimeImmutable($dateKey);
                 $holidays[] = new Holiday($date, $name);
             }
         }
@@ -64,6 +62,11 @@ final class Provider implements HolidayProvider
         usort($holidays, fn(Holiday $a, Holiday $b): int => $a->getDate() <=> $b->getDate());
 
         return $holidays;
+    }
+
+    private function dateKey(\DateTimeImmutable $t): string
+    {
+        return $t->format('Y-m-d');
     }
 
     /**
