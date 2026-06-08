@@ -91,6 +91,20 @@ holidaysBetweenを代わりに使うなりして、回避するでしょう。
 /kiro-approve-req  step4-google-calendar
 jj new
 
+-------------
+
+/kiro-spec-design step4-google-calendar
+/kiro-validate-design step4-google-calendar
+
+これで
+  Suggestion: fetchEvents() 内部で buildService() を呼ぶ（Option A）と明示する。これにより try/catch は
+  fetchEvents() 1箇所に集約でき、public メソッドはシンプルに $this->fetchEvents($from, $to)
+  を呼ぶだけになる。実装ノートに1行追加すればよい。
+
+/kiro-approve-design  step4-google-calendar
+jj new
+
+-------------
 
 
 
