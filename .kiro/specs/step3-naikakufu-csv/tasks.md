@@ -47,7 +47,7 @@
   - _Requirements: 1.3, 4.3_
   - _Depends: 4.1_
 
-- [ ] 5. PHP 7.4・8.1 両環境での検証
+- [x] 5. PHP 7.4・8.1 両環境での検証
   - Docker `php74` サービスで `vendor/bin/phpunit --exclude-group integration` を実行し全テスト PASS を確認する
   - Docker `php81` サービスで `vendor/bin/phpunit --exclude-group integration` を実行し全テスト PASS を確認する
   - PHP 8.1 での deprecation 警告がゼロであることを確認する

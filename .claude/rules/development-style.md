@@ -15,7 +15,7 @@ Think in English, interact with the user in Japanese.
 ユーザーに応答を返す際は、通常の応答内容の他、次のメッセージを返してください。
 ```
 【ルール確認】
-□ CLAUDE.local.mdを読み返した: [実施/未実施]
+□ CLAUDE.local.md、.claude/rules/development-style.mdを読み返した: [実施/未実施]
 □ 「完了」関連の禁止ワード使用: [なし/あり（具体的に記載）]
 □ TodoWriteでのステータス: [pending/in_progress のみ使用]
 □ ユーザー判断待ち項目: [具体的に列挙]

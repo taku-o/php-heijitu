@@ -130,6 +130,17 @@ takt --task "/kiro-impl step3-naikakufu-csv 4
 
 jj new
 
+-------------
+
+/kiro-impl step3-naikakufu-csv 5
+必要ならテストを修正して良い。
+
+task 5のチェックを解除して。.claude/rules/development-style.mdのルールに反している。
+
+/kiro-review-feature step3-naikakufu-csv 5
+必要ならテストを修正して良い。
+
+jj new
 
 
 
