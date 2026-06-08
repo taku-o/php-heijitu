@@ -56,7 +56,6 @@ node_modules/
 .cursor/rules/cursor-local.mdc
 .cursor/commands/sdd-fix-plan.md
 .serenaignore
-.claude/rules/development-style.md
 .claude/settings.json
 .claude/hooks/stop_words_rules.json
 .claude/hooks/block-multiedit.sh

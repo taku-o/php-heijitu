@@ -77,8 +77,9 @@ final class Provider implements HolidayProvider
         if ($csvPath !== '') {
             $content = @file_get_contents($csvPath);
             if ($content === false) {
+                $reason = error_get_last()['message'] ?? '';
                 throw new ProviderException(
-                    "CSVファイルの読み込みに失敗しました: {$csvPath}"
+                    "CSVファイルの読み込みに失敗しました: {$csvPath}" . ($reason !== '' ? " ({$reason})" : '')
                 );
             }
             return $content;
@@ -86,8 +87,9 @@ final class Provider implements HolidayProvider
 
         $content = @file_get_contents(self::CABINET_OFFICE_CSV_URL);
         if ($content === false) {
+            $reason = error_get_last()['message'] ?? '';
             throw new ProviderException(
-                '内閣府の祝日CSVの取得に失敗しました: ' . self::CABINET_OFFICE_CSV_URL
+                '内閣府の祝日CSVの取得に失敗しました: ' . self::CABINET_OFFICE_CSV_URL . ($reason !== '' ? " ({$reason})" : '')
             );
         }
         return $content;
