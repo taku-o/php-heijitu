@@ -31,16 +31,16 @@
   - _Requirements: 2.1, 2.2, 2.3, 2.4, 2.5, 2.6_
   - _Depends: 2_
 
-- [ ] 4. テストの実装
+- [x] 4. テストの実装
 
-- [ ] 4.1 ユニットテストの実装（ローカルフィクスチャ使用）
+- [x] 4.1 ユニットテストの実装（ローカルフィクスチャ使用）
   - `tests/Providers/CaoCsv/ProviderTest.php` を新規作成し `Heijitu\Tests\Providers\CaoCsv` 名前空間で定義する
   - インターフェース確認・`isHoliday`（true/false）・`holidayName`（名前返却/空文字）・`holidaysBetween`（昇順/from>to空配列/両端含む/範囲外空配列）・ローカルCSVモード確認・`Holiday::getDate()` 型確認 の 11 件のテストを実装する
   - Observable: `vendor/bin/phpunit --exclude-group integration` で 11 件すべて PASS し、0 failures・0 errors・0 warnings が出力される
   - _Requirements: 4.1, 4.2_
   - _Depends: 3_
 
-- [ ] 4.2 オンライン取得インテグレーションテストの実装
+- [x] 4.2 オンライン取得インテグレーションテストの実装
   - `@group integration` アノテーション付きでオンライン取得テストを `ProviderTest.php` に追加する
   - `csvPath` 未指定で `new Provider()` が成功し、内閣府URLから取得したデータで `isHoliday` が動作することを確認する
   - Observable: `vendor/bin/phpunit --group integration` でオンライン取得テストが PASS する

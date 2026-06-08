@@ -1,3 +1,5 @@
+Think in English, interact with the user in Japanese.
+
 ## 要件定義・設計時のルール
 * ドキュメントにない余計な機能は作らない、記載してもならない。
 * 将来導入予定の機能、拡張予定の機能は考慮してはなりません。

@@ -94,14 +94,8 @@ final class ProviderTest extends TestCase
 
         // Then: 2件（元日・成人の日）を昇順で返す
         $this->assertCount(2, $result);
-
-        $this->assertInstanceOf(Holiday::class, $result[0]);
-        $this->assertSame('2020-01-01', $result[0]->getDate()->format('Y-m-d'));
-        $this->assertSame('元日', $result[0]->getName());
-
-        $this->assertInstanceOf(Holiday::class, $result[1]);
-        $this->assertSame('2020-01-13', $result[1]->getDate()->format('Y-m-d'));
-        $this->assertSame('成人の日', $result[1]->getName());
+        $this->assertHoliday($result[0], '2020-01-01', '元日');
+        $this->assertHoliday($result[1], '2020-01-13', '成人の日');
     }
 
     // -------------------------------------------------------
@@ -131,8 +125,7 @@ final class ProviderTest extends TestCase
 
         // Then: 元日1件を返す
         $this->assertCount(1, $result);
-        $this->assertSame('2020-01-01', $result[0]->getDate()->format('Y-m-d'));
-        $this->assertSame('元日', $result[0]->getName());
+        $this->assertHoliday($result[0], '2020-01-01', '元日');
     }
 
     // -------------------------------------------------------
@@ -200,5 +193,12 @@ final class ProviderTest extends TestCase
 
         // Then: オンライン取得したデータで true を返す
         $this->assertTrue($result);
+    }
+
+    private function assertHoliday(object $holiday, string $date, string $name): void
+    {
+        $this->assertInstanceOf(Holiday::class, $holiday);
+        $this->assertSame($date, $holiday->getDate()->format('Y-m-d'));
+        $this->assertSame($name, $holiday->getName());
     }
 }
