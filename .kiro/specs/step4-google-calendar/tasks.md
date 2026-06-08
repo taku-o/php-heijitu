@@ -1,7 +1,7 @@
 # Implementation Plan
 
-- [ ] 1. google/apiclient のインストールと PHP 7.4 互換確認
-- [ ] 1.1 composer install と解決バージョンの確認
+- [x] 1. google/apiclient のインストールと PHP 7.4 互換確認
+- [x] 1.1 composer install と解決バージョンの確認
   - `docker compose -f docker/compose.yaml run --rm php74 composer install` を実行する
   - `docker compose -f docker/compose.yaml run --rm php74 composer show google/apiclient` でバージョンが `2.16.x` であることを確認する（v2.17+ が解決されていないことを確認）
   - `php74` サービス上で `\Google\Client` クラスがオートロードできることを確認する（`class_exists(\Google\Client::class)` が `true`）

@@ -138,5 +138,33 @@ jj new
 
 修正推奨事項に挙げられた項目を修正してください。
 
+/commit-push
+
+-------------
+
+/kiro-impl step4-google-calendar 1
+必要ならテストを修正して良い。
+
+git commitは取り消して。
+
+/kiro-review-feature step4-google-calendar 1
+必要ならテストを修正して良い。
+
+git commitは取り消して。
+
+jj new
+
+-------------
+
+takt --task "/kiro-impl step4-google-calendar 2
+必要ならテストを修正して良い。"
+
+/kiro-review-feature step4-google-calendar 2
+必要ならテストを修正して良い。
+
+jj new
+
+
+
 
 

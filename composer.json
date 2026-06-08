@@ -27,5 +27,14 @@
     "psr-4": {
       "Heijitu\\Tests\\": "tests/"
     }
+  },
+  "config": {
+    "policy": {
+      "advisories": {
+        "ignore-id": {
+          "PKSA-y2cr-5h3j-g3ys": "firebase/php-jwt transitive via google/apiclient (require-dev only); not deployed to production consumers"
+        }
+      }
+    }
   }
 }

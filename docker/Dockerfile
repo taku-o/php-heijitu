@@ -6,6 +6,6 @@ RUN apt-get update \
  && docker-php-ext-install mbstring \
  && rm -rf /var/lib/apt/lists/*
 
-COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
+COPY --from=composer:2.10 /usr/bin/composer /usr/bin/composer
 
 WORKDIR /app

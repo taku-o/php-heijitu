@@ -51,7 +51,7 @@ RUN apt-get update \
  && rm -rf /var/lib/apt/lists/*
 
 # Composer を公式イメージからコピー
-COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
+COPY --from=composer:2.10 /usr/bin/composer /usr/bin/composer
 
 WORKDIR /app
 ```
