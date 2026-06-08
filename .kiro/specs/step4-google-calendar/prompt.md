@@ -106,5 +106,17 @@ jj new
 
 -------------
 
+/kiro-spec-tasks step4-google-calendar
+/kiro-approve-tasks  step4-google-calendar
+jj new
+
+/kiro-review-spec step4-google-calendar
+jj new
+
+!jj-merge feature/step4-google-calendar
+/commit-commands:commit-push-pr
+/review 4
+
+
 
 
