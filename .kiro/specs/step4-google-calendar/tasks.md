@@ -8,8 +8,8 @@
   - Observable: `php74` 環境で `vendor/google/apiclient` が存在し、`2.16.x` が解決されており、`Google\Client` クラスがオートロードできる
   - _Requirements: 5.4_
 
-- [ ] 2. プロバイダー骨格（コンストラクタ・依存検出・認証検証）の実装
-- [ ] 2.1 GoogleCalendar\Provider のコンストラクタ実装
+- [x] 2. プロバイダー骨格（コンストラクタ・依存検出・認証検証）の実装
+- [x] 2.1 GoogleCalendar\Provider のコンストラクタ実装
   - `src/Providers/GoogleCalendar/Provider.php` を `declare(strict_types=1)` 付きで新規作成する（`Heijitu\Providers\GoogleCalendar` 名前空間）
   - `class_exists(\Google\Client::class)` で `google/apiclient` の導入を確認し、未導入時は `composer require google/apiclient` のインストールを案内する `ProviderException` を throw する
   - `$apiKey` と `$credentialsFile` が両方空の場合、認証情報の指定方法を案内する `ProviderException` を throw する

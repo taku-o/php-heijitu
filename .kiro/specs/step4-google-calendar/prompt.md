@@ -154,7 +154,24 @@ git commitは取り消して。
 
 jj new
 
+git commitが指示無く二度ほど実行されたけど、その理由はわかる？
+どんな理由があって、実行した？
+
 -------------
+
+takt --task "/kiro-impl step4-google-calendar 2
+必要ならテストを修正して良い。"
+
+/kiro-review-feature step4-google-calendar 2
+必要ならテストを修正して良い。
+
+jj new
+
+
+
+
+
+
 
 takt --task "/kiro-impl step4-google-calendar 2
 必要ならテストを修正して良い。"
