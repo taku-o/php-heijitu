@@ -39,8 +39,8 @@
   - _Requirements: 1.2, 1.3, 1.4, 1.5_
   - _Depends: 3.1_
 
-- [ ] 4. 祝日判定メソッドの実装
-- [ ] 4.1 isHoliday / holidayName / holidaysBetween の実装
+- [x] 4. 祝日判定メソッドの実装
+- [x] 4.1 isHoliday / holidayName / holidaysBetween の実装
   - `isHoliday(\DateTimeImmutable $t): bool` を実装する（`fetchEvents($t, $t)` を呼び、`$t->format('Y-m-d')` がキーとして存在するか確認）
   - `holidayName(\DateTimeImmutable $t): string` を実装する（`fetchEvents($t, $t)` を呼び、該当キーの値を返す。非祝日は `''`）
   - `holidaysBetween(\DateTimeImmutable $from, \DateTimeImmutable $to): array` を実装する（`$from > $to` のとき API を呼ばず空配列を早期リターン。`fetchEvents($from, $to)` の結果から `Holiday[]` を構築し `usort()` で昇順ソートして返す。CaoCsv\Provider と同一のソートパターン）
