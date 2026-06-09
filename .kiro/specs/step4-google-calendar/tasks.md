@@ -19,8 +19,8 @@
   - _Requirements: 1.1, 2.4, 2.5, 4.1_
   - _Depends: 1.1_
 
-- [ ] 3. API 通信ロジック（buildService・fetchEvents）の実装
-- [ ] 3.1 buildService の実装（認証クライアント初期化）
+- [x] 3. API 通信ロジック（buildService・fetchEvents）の実装
+- [x] 3.1 buildService の実装（認証クライアント初期化）
   - `buildService()` を実装する（戻り値型は `object`）
   - `$credentialsFile` が非空なら `setAuthConfig` + `addScope(CALENDAR_READONLY)` でサービスアカウント認証を設定し、そうでなければ `setDeveloperKey($this->apiKey)` で API キー認証を設定する
   - `Google\Service\Calendar` インスタンスを返す
@@ -28,7 +28,7 @@
   - _Requirements: 2.1, 2.2, 2.3_
   - _Depends: 2.1_
 
-- [ ] 3.2 fetchEvents の実装（API呼び出し・ページング・フィルタリング）
+- [x] 3.2 fetchEvents の実装（API呼び出し・ページング・フィルタリング）
   - `fetchEvents(\DateTimeImmutable $from, \DateTimeImmutable $to): array` を実装する
   - `fetchEvents()` 内部で `buildService()` を呼んで Calendar サービスを取得する
   - `events->listEvents()` を `singleEvents=true`・`orderBy=startTime`・`maxResults=2500`・`timeMin`（`$from` の 0 時 0 分 0 秒）・`timeMax`（`$to` の翌日 0 時 0 分 0 秒）で呼び出す
@@ -67,7 +67,7 @@
   - `holidaysBetween` が指定期間内の祝日を `Holiday[]` 昇順で返すことを検証する
   - `Holiday::getDate()` が `DateTimeImmutable` であることを検証する
   - Observable: `GOOGLE_API_KEY` 環境変数を設定した状態で `vendor/bin/phpunit --group integration` が全件 PASS する
-  - _Requirements: 3.1, 3.2, 3.3, 3.4, 3.5, 5.2, 5.5_
+  - _Requirements: 2.3, 3.1, 3.2, 3.3, 3.4, 3.5, 5.2, 5.5_
   - _Depends: 5.1, 4.1_
 
 - [ ] 6. PHP 7.4・8.1 両環境での検証
