@@ -199,7 +199,7 @@ Google Calendar API を使った `HolidayProvider` 実装を追加する。
 **API仕様・使い方・プロバイダーガイド**（en/ja 両方・確定）
 - `docs/en/api-spec.md` / `docs/ja/api-spec.md`: 全公開型・全 API・設定ファイル仕様
 - `docs/en/usage.md` / `docs/ja/usage.md`: インストール〜ユースケース別の使い方
-- `docs/en/providers.md` / `docs/ja/providers.md`: 3プロバイダーの選択基準・設定・注意点（Google Calendar APIキー取得手順を含む）
+- `docs/en/providers.md` / `docs/ja/providers.md`: 3プロバイダーの選択基準・設定・注意点（Google Calendar APIキー取得手順・コンストラクタへの渡し方・環境変数連携パターンを含む）
 
 **最終確認**
 - `phpunit` が全て通る

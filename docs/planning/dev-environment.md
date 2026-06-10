@@ -51,7 +51,7 @@ RUN apt-get update \
  && rm -rf /var/lib/apt/lists/*
 
 # Composer を公式イメージからコピー
-COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
+COPY --from=composer:2.10 /usr/bin/composer /usr/bin/composer
 
 WORKDIR /app
 ```
@@ -124,7 +124,37 @@ docker compose -f docker/compose.yaml run --rm php74 php examples/main.php
 
 ---
 
-## 8. 作成タイミングと workplan との関係
+## 8. integration テスト用の資格情報（`.env` ファイル）
+
+Google Calendar プロバイダー（Step 4）の integration テストを実行するには、APIキーまたはサービスアカウントの資格情報が必要。
+
+### セットアップ手順
+
+```bash
+# プロジェクトルートに .env を作成（.gitignore 済み・コミット禁止）
+echo 'GOOGLE_API_KEY=your_actual_api_key_here' > .env
+
+# サービスアカウントを使う場合は以下を追記
+echo 'GOOGLE_CREDENTIALS_FILE=/path/to/credentials.json' >> .env
+```
+
+### 仕組み
+
+- Docker Compose はプロジェクトルートの `.env` を自動読み込みする。
+- `docker/compose.yaml` の `environment: - GOOGLE_API_KEY` は「ホストまたは `.env` に値があればコンテナに渡す」という設定（Step 4 で追加済み）。
+- ライブラリ本体は環境変数を読まない。テストコードが `getenv('GOOGLE_API_KEY')` で値を取得し、コンストラクタに渡す。
+
+### integration テストの実行
+
+```bash
+docker compose -f docker/compose.yaml run --rm php81 vendor/bin/phpunit --group integration
+```
+
+> ⚠️ `.env` ファイルは `.gitignore` に含まれているためコミットされない。チームメンバーへの共有は別途行うこと（1Password、AWS Secrets Manager 等）。
+
+---
+
+## 9. 作成タイミングと workplan との関係
 
 - 本構成の実ファイル（`docker/Dockerfile`・`docker/compose.yaml`）は **Step 1（プロジェクト初期化）着手時に用意**する。
 - `composer.json` 作成・`composer install`・PHPUnit 実行は、いずれも本 Docker 環境上で行う。

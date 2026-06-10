@@ -1,0 +1,626 @@
+<?php
+
+declare(strict_types=1);
+
+namespace Heijitu\Tests\Providers\GoogleCalendar;
+
+use Heijitu\Exception\ProviderException;
+use Heijitu\HolidayProvider;
+use Heijitu\Providers\GoogleCalendar\Provider;
+use Heijitu\Tests\Providers\ProviderTestCase;
+
+final class ProviderTest extends ProviderTestCase
+{
+    // -------------------------------------------------------
+    // コンストラクタ契約テスト（要件 2.4, 4.1）
+    // -------------------------------------------------------
+
+    public function testThrowsWhenNoCredentials(): void
+    {
+        $this->expectException(ProviderException::class);
+        new Provider('', '');
+    }
+
+    // -------------------------------------------------------
+    // HolidayProvider インターフェースの実装確認（要件 1.1）
+    // -------------------------------------------------------
+
+    public function testImplementsHolidayProviderInterface(): void
+    {
+        // When: API キーのみでインスタンスを生成する
+        $provider = new Provider('dummy_key', '');
+
+        // Then: HolidayProvider インターフェースを実装している
+        $this->assertInstanceOf(HolidayProvider::class, $provider);
+    }
+
+    // -------------------------------------------------------
+    // コンストラクタ: credentialsFile のみで構築成功（要件 2.2, 2.5）
+    // -------------------------------------------------------
+
+    public function testConstructsWithCredentialsFileOnly(): void
+    {
+        // When: apiKey 空・credentialsFile のみでインスタンスを生成する
+        $provider = new Provider('', '/path/to/credentials.json');
+
+        // Then: HolidayProvider として構築に成功する
+        $this->assertInstanceOf(HolidayProvider::class, $provider);
+    }
+
+    // -------------------------------------------------------
+    // コンストラクタ: 両方指定で構築成功（要件 2.5）
+    // -------------------------------------------------------
+
+    public function testConstructsWithBothApiKeyAndCredentialsFile(): void
+    {
+        // When: apiKey と credentialsFile の両方を指定してインスタンスを生成する
+        $provider = new Provider('dummy_key', '/path/to/credentials.json');
+
+        // Then: HolidayProvider として構築に成功する
+        $this->assertInstanceOf(HolidayProvider::class, $provider);
+    }
+
+    // -------------------------------------------------------
+    // holidaysBetween: from > to で空配列（要件 3.6）
+    // -------------------------------------------------------
+
+    public function testHolidaysBetweenReturnsEmptyWhenFromAfterTo(): void
+    {
+        // Given: API キーでインスタンスを生成する
+        $provider = new Provider('dummy_key', '');
+        $from = new \DateTimeImmutable('2024-01-10');
+        $to   = new \DateTimeImmutable('2024-01-01');
+
+        // When: from > to で holidaysBetween を呼び出す
+        $result = $provider->holidaysBetween($from, $to);
+
+        // Then: 空配列を返す
+        $this->assertSame([], $result);
+    }
+
+    // -------------------------------------------------------
+    // fetchEvents: 終日イベントが祝日として返される（要件 1.2, 1.4, 3.1）
+    // -------------------------------------------------------
+
+    public function testIsHolidayReturnsTrueForAllDayEvent(): void
+    {
+        // Given: 終日イベント1件を返すモックサービスを注入する
+        $provider = $this->createProviderWithMockService(
+            $this->createSinglePageEventList([
+                $this->createAllDayEvent('2024-01-01', '元日'),
+            ])
+        );
+
+        // When: 該当日で isHoliday を呼び出す
+        $result = $provider->isHoliday(new \DateTimeImmutable('2024-01-01'));
+
+        // Then: true を返す
+        $this->assertTrue($result);
+    }
+
+    // -------------------------------------------------------
+    // fetchEvents: 終日イベントがない日は非祝日（要件 3.2）
+    // -------------------------------------------------------
+
+    public function testIsHolidayReturnsFalseWhenNoEvents(): void
+    {
+        // Given: 空のイベントリストを返すモックサービスを注入する
+        $provider = $this->createProviderWithMockService(
+            $this->createSinglePageEventList([])
+        );
+
+        // When: isHoliday を呼び出す
+        $result = $provider->isHoliday(new \DateTimeImmutable('2024-01-02'));
+
+        // Then: false を返す
+        $this->assertFalse($result);
+    }
+
+    // -------------------------------------------------------
+    // fetchEvents: 祝日名が正しく返される（要件 3.3）
+    // -------------------------------------------------------
+
+    public function testHolidayNameReturnsEventSummary(): void
+    {
+        // Given: 終日イベント1件を返すモックサービスを注入する
+        $provider = $this->createProviderWithMockService(
+            $this->createSinglePageEventList([
+                $this->createAllDayEvent('2024-01-01', '元日'),
+            ])
+        );
+
+        // When: 該当日で holidayName を呼び出す
+        $result = $provider->holidayName(new \DateTimeImmutable('2024-01-01'));
+
+        // Then: イベントの summary が返る
+        $this->assertSame('元日', $result);
+    }
+
+    // -------------------------------------------------------
+    // fetchEvents: 非祝日で空文字を返す（要件 3.4）
+    // -------------------------------------------------------
+
+    public function testHolidayNameReturnsEmptyStringForNonHoliday(): void
+    {
+        // Given: 空のイベントリストを返すモックサービスを注入する
+        $provider = $this->createProviderWithMockService(
+            $this->createSinglePageEventList([])
+        );
+
+        // When: 非祝日で holidayName を呼び出す
+        $result = $provider->holidayName(new \DateTimeImmutable('2024-01-02'));
+
+        // Then: 空文字を返す
+        $this->assertSame('', $result);
+    }
+
+    // -------------------------------------------------------
+    // fetchEvents: 時刻指定イベント（非終日）は除外される（要件 1.4）
+    // -------------------------------------------------------
+
+    public function testFetchEventsFiltersOutNonAllDayEvents(): void
+    {
+        // Given: 終日イベントと時刻指定イベントが混在するリスト
+        $provider = $this->createProviderWithMockService(
+            $this->createSinglePageEventList([
+                $this->createAllDayEvent('2024-01-01', '元日'),
+                $this->createTimedEvent(),
+            ])
+        );
+
+        // When: holidaysBetween で取得する
+        $result = $provider->holidaysBetween(
+            new \DateTimeImmutable('2024-01-01'),
+            new \DateTimeImmutable('2024-01-01')
+        );
+
+        // Then: 終日イベントの元日のみ返る
+        $this->assertCount(1, $result);
+        $this->assertSame('元日', $result[0]->getName());
+    }
+
+    // -------------------------------------------------------
+    // fetchEvents: ページングで全件取得される（要件 1.3）
+    // -------------------------------------------------------
+
+    public function testFetchEventsPaginatesThroughAllPages(): void
+    {
+        // Given: 2ページにまたがるイベントリストを返すモックサービスを注入する
+        $page1 = $this->createEventListWithToken(
+            [$this->createAllDayEvent('2024-01-01', '元日')],
+            'next_page_token'
+        );
+        $page2 = $this->createSinglePageEventList(
+            [$this->createAllDayEvent('2024-01-08', '成人の日')]
+        );
+        $provider = $this->createProviderWithPaginatedMockService([$page1, $page2]);
+
+        // When: holidaysBetween で範囲指定する
+        $result = $provider->holidaysBetween(
+            new \DateTimeImmutable('2024-01-01'),
+            new \DateTimeImmutable('2024-01-31')
+        );
+
+        // Then: 全ページのイベントが取得される
+        $this->assertCount(2, $result);
+        $this->assertSame('元日', $result[0]->getName());
+        $this->assertSame('成人の日', $result[1]->getName());
+    }
+
+    // -------------------------------------------------------
+    // fetchEvents: holidaysBetween が Holiday[] を昇順で返す（要件 3.5）
+    // -------------------------------------------------------
+
+    public function testHolidaysBetweenReturnsHolidaysInAscendingOrder(): void
+    {
+        // Given: 複数の終日イベントを返すモックサービスを注入する
+        $provider = $this->createProviderWithMockService(
+            $this->createSinglePageEventList([
+                $this->createAllDayEvent('2024-01-08', '成人の日'),
+                $this->createAllDayEvent('2024-01-01', '元日'),
+            ])
+        );
+
+        // When: holidaysBetween を呼び出す
+        $result = $provider->holidaysBetween(
+            new \DateTimeImmutable('2024-01-01'),
+            new \DateTimeImmutable('2024-01-31')
+        );
+
+        // Then: 昇順ソートされた Holiday[] が返る
+        $this->assertCount(2, $result);
+        $this->assertHoliday($result[0], '2024-01-01', '元日');
+        $this->assertHoliday($result[1], '2024-01-08', '成人の日');
+    }
+
+    // -------------------------------------------------------
+    // fetchEvents: Holiday::getDate() が DateTimeImmutable（要件 5.5）
+    // -------------------------------------------------------
+
+    public function testHolidaysBetweenReturnsDateTimeImmutableInHoliday(): void
+    {
+        // Given: 終日イベント1件を返すモックサービスを注入する
+        $provider = $this->createProviderWithMockService(
+            $this->createSinglePageEventList([
+                $this->createAllDayEvent('2024-01-01', '元日'),
+            ])
+        );
+
+        // When: holidaysBetween を呼び出す
+        $result = $provider->holidaysBetween(
+            new \DateTimeImmutable('2024-01-01'),
+            new \DateTimeImmutable('2024-01-01')
+        );
+
+        // Then: Holiday の date が DateTimeImmutable である
+        $this->assertCount(1, $result);
+        $this->assertInstanceOf(\DateTimeImmutable::class, $result[0]->getDate());
+    }
+
+    // -------------------------------------------------------
+    // 境界値: holidaysBetween — from == to で祝日1件を返す（要件 3.5）
+    // -------------------------------------------------------
+
+    public function testHolidaysBetweenIncludesBothEndpoints(): void
+    {
+        // Given: 終日イベント1件を返すモックサービスを注入する
+        $provider = $this->createProviderWithMockService(
+            $this->createSinglePageEventList([
+                $this->createAllDayEvent('2024-01-01', '元日'),
+            ])
+        );
+        $date = new \DateTimeImmutable('2024-01-01');
+
+        // When: from == to == 祝日 で holidaysBetween を呼び出す
+        $result = $provider->holidaysBetween($date, $date);
+
+        // Then: 元日1件を返す
+        $this->assertCount(1, $result);
+        $this->assertHoliday($result[0], '2024-01-01', '元日');
+    }
+
+    // -------------------------------------------------------
+    // 境界値: holidaysBetween — 範囲内に祝日がない場合（要件 3.5）
+    // -------------------------------------------------------
+
+    public function testHolidaysBetweenReturnsEmptyArrayWhenNoHolidaysInRange(): void
+    {
+        // Given: 空のイベントリストを返すモックサービスを注入する
+        $provider = $this->createProviderWithMockService(
+            $this->createSinglePageEventList([])
+        );
+
+        // When: 祝日のない範囲で holidaysBetween を呼び出す
+        $result = $provider->holidaysBetween(
+            new \DateTimeImmutable('2024-01-02'),
+            new \DateTimeImmutable('2024-01-12')
+        );
+
+        // Then: 空配列を返す
+        $this->assertSame([], $result);
+    }
+
+    // -------------------------------------------------------
+    // fetchEvents: API 例外が ProviderException に変換される（要件 1.5）
+    // -------------------------------------------------------
+
+    public function testFetchEventsWrapsApiExceptionInProviderException(): void
+    {
+        // Given: listEvents が例外を throw するモックサービスを注入する
+        $originalException = new \RuntimeException('API connection failed');
+        $provider = $this->createProviderWithThrowingMockService($originalException);
+
+        // Then: ProviderException が throw される
+        $this->expectException(ProviderException::class);
+        $this->expectExceptionMessageMatches('/Google Calendar API/');
+
+        // When: isHoliday を呼び出す
+        $provider->isHoliday(new \DateTimeImmutable('2024-01-01'));
+    }
+
+    // -------------------------------------------------------
+    // fetchEvents: ProviderException に元例外が $previous として連鎖される（要件 1.5）
+    // -------------------------------------------------------
+
+    public function testProviderExceptionChainsPreviousException(): void
+    {
+        // Given: listEvents が例外を throw するモックサービスを注入する
+        $originalException = new \RuntimeException('API connection failed');
+        $provider = $this->createProviderWithThrowingMockService($originalException);
+
+        // When: isHoliday を呼び出して ProviderException を捕捉する
+        try {
+            $provider->isHoliday(new \DateTimeImmutable('2024-01-01'));
+            $this->fail('ProviderException が throw されるべき');
+        } catch (ProviderException $e) {
+            // Then: 元例外が $previous として連鎖されている
+            $this->assertSame($originalException, $e->getPrevious());
+        }
+    }
+
+    // -------------------------------------------------------
+    // fetchEvents: buildService のキャッシュが機能する（要件 1.2）
+    // -------------------------------------------------------
+
+    public function testBuildServiceCachesServiceInstance(): void
+    {
+        // Given: 認証情報なしで Provider を生成する（buildService は実際に呼ばれる）
+        $provider = new Provider('dummy_key', '');
+
+        $buildService = new \ReflectionMethod(Provider::class, 'buildService');
+        $buildService->setAccessible(true);
+
+        // When: buildService を2回呼び出す
+        $service1 = $buildService->invoke($provider);
+        $service2 = $buildService->invoke($provider);
+
+        // Then: 同一インスタンスが返ることでキャッシュが機能していることを確認
+        $this->assertSame($service1, $service2);
+    }
+
+    // -------------------------------------------------------
+    // fetchEvents: listEvents に渡すパラメータが正しい（要件 1.2, 1.3）
+    // -------------------------------------------------------
+
+    public function testFetchEventsPassesCorrectParametersToListEvents(): void
+    {
+        // Given: パラメータを検証するモックサービスを注入する
+        $date = new \DateTimeImmutable('2024-01-01');
+        $expectedCalendarId = 'ja.japanese.official#holiday@group.v.calendar.google.com';
+        $expectedTimeMin = $date->format('c');
+        $expectedTimeMax = $date->modify('+1 day')->setTime(0, 0, 0)->format('c');
+
+        $eventList = $this->createSinglePageEventList([]);
+        $mockEvents = $this->createMock(\Google\Service\Calendar\Resource\Events::class);
+        $mockEvents->expects($this->once())
+                   ->method('listEvents')
+                   ->with(
+                       $expectedCalendarId,
+                       $this->callback(static function (array $params) use ($expectedTimeMin, $expectedTimeMax): bool {
+                           return $params['singleEvents'] === true
+                               && $params['orderBy'] === 'startTime'
+                               && $params['maxResults'] === 2500
+                               && $params['timeMin'] === $expectedTimeMin
+                               && $params['timeMax'] === $expectedTimeMax;
+                       })
+                   )
+                   ->willReturn($eventList);
+        $mockService = new \stdClass();
+        $mockService->events = $mockEvents;
+        $provider = $this->injectMockService(new Provider('dummy_key', ''), $mockService);
+
+        // When: isHoliday を呼び出す
+        $provider->isHoliday($date);
+    }
+
+    // -------------------------------------------------------
+    // fetchEvents: buildService の例外が ProviderException にラップされる（要件 1.5）
+    // -------------------------------------------------------
+
+    public function testBuildServiceExceptionWrappedInProviderException(): void
+    {
+        // Given: 存在しない認証ファイルを指定した Provider（buildService が throw する）
+        $provider = new Provider('', '/nonexistent/path/credentials.json');
+
+        // Then: ProviderException が throw される
+        $this->expectException(ProviderException::class);
+
+        // When: isHoliday を呼び出す（buildService 内部で例外が発生する）
+        $provider->isHoliday(new \DateTimeImmutable('2024-01-01'));
+    }
+
+    // -------------------------------------------------------
+    // ヘルパー: モックサービスを注入した Provider を生成
+    // -------------------------------------------------------
+
+    /**
+     * 単一ページのイベントリストを返すモックサービスを注入した Provider を返す。
+     *
+     * @param \Google\Service\Calendar\Events $eventList
+     */
+    private function createProviderWithMockService(object $eventList): Provider
+    {
+        $mockService = $this->createMockCalendarService($eventList);
+        return $this->injectMockService(new Provider('dummy_key', ''), $mockService);
+    }
+
+    /**
+     * 複数ページのイベントリストを順次返すモックサービスを注入した Provider を返す。
+     *
+     * @param \Google\Service\Calendar\Events[] $eventLists
+     */
+    private function createProviderWithPaginatedMockService(array $eventLists): Provider
+    {
+        $mockEvents = $this->createMock(\Google\Service\Calendar\Resource\Events::class);
+        $mockEvents->method('listEvents')
+            ->willReturnOnConsecutiveCalls(...$eventLists);
+
+        $mockService = new \stdClass();
+        $mockService->events = $mockEvents;
+
+        return $this->injectMockService(new Provider('dummy_key', ''), $mockService);
+    }
+
+    /**
+     * listEvents が例外を throw するモックサービスを注入した Provider を返す。
+     */
+    private function createProviderWithThrowingMockService(\Throwable $exception): Provider
+    {
+        $mockEvents = $this->createMock(\Google\Service\Calendar\Resource\Events::class);
+        $mockEvents->method('listEvents')
+            ->willThrowException($exception);
+
+        $mockService = new \stdClass();
+        $mockService->events = $mockEvents;
+
+        return $this->injectMockService(new Provider('dummy_key', ''), $mockService);
+    }
+
+    /**
+     * リフレクションで $service プロパティにモックを注入する。
+     */
+    private function injectMockService(Provider $provider, object $mockService): Provider
+    {
+        $ref = new \ReflectionProperty(Provider::class, 'service');
+        $ref->setAccessible(true);
+        $ref->setValue($provider, $mockService);
+
+        return $provider;
+    }
+
+    /**
+     * 単一ページ（nextPageToken = null）のモック CalendarService を生成する。
+     *
+     * @param \Google\Service\Calendar\Events $eventList
+     * @return object
+     */
+    private function createMockCalendarService(object $eventList): object
+    {
+        $mockEvents = $this->createMock(\Google\Service\Calendar\Resource\Events::class);
+        $mockEvents->method('listEvents')
+            ->willReturn($eventList);
+
+        $mockService = new \stdClass();
+        $mockService->events = $mockEvents;
+
+        return $mockService;
+    }
+
+    // -------------------------------------------------------
+    // ヘルパー: モック Event / EventList の生成
+    // -------------------------------------------------------
+
+    /**
+     * 終日イベント（start.date が設定されている）のモックを生成する。
+     */
+    private function createAllDayEvent(string $date, string $summary): object
+    {
+        $start = $this->createMock(\Google\Service\Calendar\EventDateTime::class);
+        $start->method('getDate')->willReturn($date);
+
+        $event = $this->createMock(\Google\Service\Calendar\Event::class);
+        $event->method('getStart')->willReturn($start);
+        $event->method('getSummary')->willReturn($summary);
+
+        return $event;
+    }
+
+    /**
+     * 時刻指定イベント（start.date が null）のモックを生成する。
+     */
+    private function createTimedEvent(): object
+    {
+        $start = $this->createMock(\Google\Service\Calendar\EventDateTime::class);
+        $start->method('getDate')->willReturn(null);
+
+        $event = $this->createMock(\Google\Service\Calendar\Event::class);
+        $event->method('getStart')->willReturn($start);
+
+        return $event;
+    }
+
+    /**
+     * nextPageToken = null の単一ページ EventList モックを生成する。
+     *
+     * @param object[] $events
+     */
+    private function createSinglePageEventList(array $events): object
+    {
+        return $this->createEventListWithToken($events, null);
+    }
+
+    /**
+     * 指定した nextPageToken を持つ EventList モックを生成する。
+     *
+     * @param object[] $events
+     * @param string|null $nextPageToken
+     */
+    private function createEventListWithToken(array $events, ?string $nextPageToken): object
+    {
+        $eventList = $this->createMock(\Google\Service\Calendar\Events::class);
+        $eventList->method('getItems')->willReturn($events);
+        $eventList->method('getNextPageToken')->willReturn($nextPageToken);
+
+        return $eventList;
+    }
+
+    // -------------------------------------------------------
+    // インテグレーションテスト: 実 API 呼び出し（要件 5.2）
+    // -------------------------------------------------------
+
+    /**
+     * 実 API でインテグレーションテスト用の Provider を生成する。
+     * 環境変数が未設定の場合はテストをスキップする。
+     */
+    private function createRealProvider(): Provider
+    {
+        $apiKey = getenv('GOOGLE_API_KEY') ?: '';
+        $credentialsFile = getenv('GOOGLE_CREDENTIALS_FILE') ?: '';
+        if ($apiKey === '' && $credentialsFile === '') {
+            $this->markTestSkipped('GOOGLE_API_KEY or GOOGLE_CREDENTIALS_FILE が未設定');
+        }
+
+        return new Provider($apiKey, $credentialsFile);
+    }
+
+    /**
+     * @group integration
+     */
+    public function testIsHolidayWithRealApi(): void
+    {
+        // Given: 実 API で Provider を生成する
+        $provider = $this->createRealProvider();
+
+        // When/Then: 既知祝日（2024-01-01 元日）で true を返す
+        $this->assertTrue($provider->isHoliday(new \DateTimeImmutable('2024-01-01')));
+
+        // When/Then: 非祝日（2024-01-02）で false を返す
+        $this->assertFalse($provider->isHoliday(new \DateTimeImmutable('2024-01-02')));
+    }
+
+    /**
+     * @group integration
+     */
+    public function testHolidayNameWithRealApi(): void
+    {
+        // Given: 実 API で Provider を生成する
+        $provider = $this->createRealProvider();
+
+        // When/Then: 祝日で非空文字列を返す
+        $name = $provider->holidayName(new \DateTimeImmutable('2024-01-01'));
+        $this->assertNotSame('', $name);
+
+        // When/Then: 非祝日で空文字を返す
+        $this->assertSame('', $provider->holidayName(new \DateTimeImmutable('2024-01-02')));
+    }
+
+    /**
+     * @group integration
+     */
+    public function testHolidaysBetweenWithRealApi(): void
+    {
+        // Given: 実 API で Provider を生成する
+        $provider = $this->createRealProvider();
+
+        // When: 2024年1月の範囲で祝日を取得する
+        $result = $provider->holidaysBetween(
+            new \DateTimeImmutable('2024-01-01'),
+            new \DateTimeImmutable('2024-01-31')
+        );
+
+        // Then: 1件以上の Holiday が返る
+        $this->assertNotEmpty($result);
+
+        // Then: 全要素が Holiday インスタンスで昇順に並んでいる
+        $prevDate = null;
+        foreach ($result as $holiday) {
+            $this->assertInstanceOf(\Heijitu\Holiday::class, $holiday);
+            $date = $holiday->getDate();
+            $this->assertInstanceOf(\DateTimeImmutable::class, $date);
+            if ($prevDate !== null) {
+                $this->assertGreaterThanOrEqual($prevDate, $date);
+            }
+            $prevDate = $date;
+        }
+    }
+}
