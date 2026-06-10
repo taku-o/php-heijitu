@@ -95,6 +95,8 @@ final class Provider implements HolidayProvider
 
     /**
      * $from〜$to（両端含む）の終日イベントを Google Calendar API から全ページ取得する。
+     * isHoliday・holidayName はそれぞれ独立してこのメソッドを呼び出すため、
+     * 同日に両方を呼び出すと API リクエストが2回発生する（キャッシュなし）。
      *
      * @return array<string, string> キー: 'YYYY-MM-DD', 値: 祝日名
      * @throws ProviderException API 呼び出し失敗
@@ -117,6 +119,7 @@ final class Provider implements HolidayProvider
 
             $holidays = [];
 
+            // nextPageToken が null になるまで全ページを取得する
             while (true) {
                 $eventList = $service->events->listEvents(self::CALENDAR_ID, $params);
 
