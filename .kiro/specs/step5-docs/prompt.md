@@ -60,9 +60,20 @@ jj new
 
 /kiro-spec-design step5-docs
 /kiro-validate-design step5-docs
+
+ネットワーク失敗時はエラーを投げる。
+エラーを握りつぶさない。
+
 /kiro-approve-design  step5-docs
 jj new
 
+-------------
+
+/kiro-spec-tasks step5-docs
+/kiro-approve-tasks  step5-docs
+jj new
+
+/kiro-review-spec step5-docs
 
 
 
