@@ -1,7 +1,7 @@
 # Implementation Plan
 
 - [ ] 1. PHPDoc 追記
-- [ ] 1.1 値オブジェクト（Holiday・MonthDay）への PHPDoc 追記
+- [ ] 1.1 (P) 値オブジェクト（Holiday・MonthDay）への PHPDoc 追記
   - `src/Holiday.php` にクラス説明・`__construct`・`getDate`・`getName` の PHPDoc を追記する
   - `src/MonthDay.php` にクラス説明・`__construct`・`getMonth`・`getDay`・`matches` の PHPDoc を追記する
   - `Holiday` クラスのクラス説明: 「祝日の日付と名称を保持する不変値オブジェクト」
@@ -9,6 +9,7 @@
   - 配列型は `Holiday[]`・`DateTimeImmutable[]` 等 PHPDoc array notation で表現する（`@return Holiday[]`）
   - IDE で `$holiday->getDate()` の戻り値型が `DateTimeImmutable` として補完されること
   - _Requirements: 2.1, 2.2, 2.3_
+  - _Boundary: src/Holiday.php, src/MonthDay.php_
 
 - [ ] 1.2 (P) プロバイダークラスへの PHPDoc 追記
   - `src/Providers/HolidayJp/Provider.php` にクラス説明・`__construct` の `@throws` PHPDoc・`isHoliday`/`holidayName`/`holidaysBetween` への `/** {@inheritdoc} */` を追記する
@@ -103,3 +104,9 @@
   - PHP 7.4・8.1 両環境で examples/main.php が期待出力を返し正常終了すること
   - _Depends: 2.1_
   - _Requirements: 1.7, 5.4, 5.5_
+
+- [ ] 6. 計画ドキュメントの移動
+- [ ] 6.1 docs/planning/ を .kiro/specs/initial-planning/planning/ へ移動する
+  - `docs/planning/` 配下の全ファイルを `.kiro/specs/initial-planning/planning/` へ移動する
+  - 移動後、`docs/planning/` ディレクトリが存在しないこと
+  - `.kiro/specs/initial-planning/planning/` 配下に全ファイルが存在することを確認する

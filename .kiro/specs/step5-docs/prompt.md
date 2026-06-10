@@ -75,6 +75,16 @@ jj new
 
 /kiro-review-spec step5-docs
 
+修正推奨の項目は修正してください。
+
+docs/planningの資料は、.kiro/specs/initial-planning/planning以下に移動する。
+これは、tasks.mdにTask 6の作業として追加。
+
+jj new
+
+!jj-merge feature/step5-docs
+/commit-commands:commit-push-pr
+/review 4
 
 
 

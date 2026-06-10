@@ -578,4 +578,4 @@ docker compose -f docker/compose.yaml run --rm php81 php examples/main.php
 
 本ステップはドキュメント追記・ファイル作成のみであり、新たなエラー処理ロジックは追加しない。
 
-`examples/main.php` では各 API 呼び出しで発生しうる例外を `try/catch` で捕捉しユーザーに提示するパターンを示す。これはドキュメント目的のサンプルであり、例外ハンドリングの実装変更ではない。
+`examples/main.php` では各セクションで API 呼び出しパターンを示す。Section 5（CaoCsv オンラインモード）はネットワーク失敗時に `ProviderException` をそのまま伝播させる（`try/catch` しない）。エラーを握りつぶすフォールバックは行わない。
