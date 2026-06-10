@@ -70,8 +70,8 @@
   - _Requirements: 2.3, 3.1, 3.2, 3.3, 3.4, 3.5, 5.2, 5.5_
   - _Depends: 5.1, 4.1_
 
-- [ ] 6. PHP 7.4・8.1 両環境での検証
-- [ ] 6.1 Docker 両バージョンでのテスト通過確認
+- [x] 6. PHP 7.4・8.1 両環境での検証
+- [x] 6.1 Docker 両バージョンでのテスト通過確認
   - `docker compose -f docker/compose.yaml run --rm php74 vendor/bin/phpunit` を実行し全テスト（integration 除く）PASS を確認する
   - `docker compose -f docker/compose.yaml run --rm php81 vendor/bin/phpunit` を実行し全テスト（integration 除く）PASS を確認する
   - PHP 8.1 での `google/apiclient` v2.16.x が出す Deprecated Notice は既知制約として許容する。fatal error・型エラーがないことを確認する
