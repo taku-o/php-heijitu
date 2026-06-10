@@ -84,7 +84,27 @@ jj new
 
 !jj-merge feature/step5-docs
 /commit-commands:commit-push-pr
-/review 4
+/review 5
+
+こちら修正してください。
+  1. design.md L65 の docs/planning/ パス参照に「※ Task 6 実行後は
+  .kiro/specs/initial-planning/planning/ へ移動済み」等の注記を追加する
+  2. research.md L953 の examples/config/excluded_dates.yaml
+  行に「設計フェーズで不採用」の注記を追記する
+
+/commit-push
+
+-------------
+
+/kiro-impl step5-docs
+必要ならテストを修正して良い。
+
+/kiro-review-feature step5-docs
+必要ならテストを修正して良い。
+
+jj new
+
+
 
 
 

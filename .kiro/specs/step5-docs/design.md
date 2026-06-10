@@ -44,7 +44,7 @@ Step 1–4 でコア実装・全プロバイダーが完成しており、本ス
 ### Allowed Dependencies
 
 - `src/` 実装（BusinessCalendar・各プロバイダー・例外クラス）を read-only で参照し、PHPDoc・examples のコンテンツソースとして使用する
-- `docs/planning/design.md`・`decisions.md`・`workplan.md` を参照し、ドキュメント内容の根拠とする
+- `docs/planning/design.md`・`decisions.md`・`workplan.md` を参照し、ドキュメント内容の根拠とする（※ Task 6 実行後は `.kiro/specs/initial-planning/planning/` へ移動済み）
 - Docker 環境（`docker/compose.yaml`）を利用するが変更しない
 
 ### Revalidation Triggers
