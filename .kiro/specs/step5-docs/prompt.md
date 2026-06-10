@@ -96,14 +96,20 @@ jj new
 
 -------------
 
-/kiro-impl step5-docs
+/kiro-impl step5-docs 1
 必要ならテストを修正して良い。
 
-/kiro-review-feature step5-docs
+/prevent-cc-sdd-auto-progress
+
+Task 1のチェックボックスを外してください。
+明確にルール違反です。
+
+/kiro-review-feature step5-docs 1
 必要ならテストを修正して良い。
 
 jj new
 
+-------------
 
 
 
