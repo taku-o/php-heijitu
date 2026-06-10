@@ -543,4 +543,84 @@ final class ProviderTest extends ProviderTestCase
 
         return $eventList;
     }
+
+    // -------------------------------------------------------
+    // インテグレーションテスト: 実 API 呼び出し（要件 5.2）
+    // -------------------------------------------------------
+
+    /**
+     * 実 API でインテグレーションテスト用の Provider を生成する。
+     * 環境変数が未設定の場合はテストをスキップする。
+     */
+    private function createRealProvider(): Provider
+    {
+        $apiKey = getenv('GOOGLE_API_KEY') ?: '';
+        $credentialsFile = getenv('GOOGLE_CREDENTIALS_FILE') ?: '';
+        if ($apiKey === '' && $credentialsFile === '') {
+            $this->markTestSkipped('GOOGLE_API_KEY or GOOGLE_CREDENTIALS_FILE が未設定');
+        }
+
+        return new Provider($apiKey, $credentialsFile);
+    }
+
+    /**
+     * @group integration
+     */
+    public function testIsHolidayWithRealApi(): void
+    {
+        // Given: 実 API で Provider を生成する
+        $provider = $this->createRealProvider();
+
+        // When/Then: 既知祝日（2024-01-01 元日）で true を返す
+        $this->assertTrue($provider->isHoliday(new \DateTimeImmutable('2024-01-01')));
+
+        // When/Then: 非祝日（2024-01-02）で false を返す
+        $this->assertFalse($provider->isHoliday(new \DateTimeImmutable('2024-01-02')));
+    }
+
+    /**
+     * @group integration
+     */
+    public function testHolidayNameWithRealApi(): void
+    {
+        // Given: 実 API で Provider を生成する
+        $provider = $this->createRealProvider();
+
+        // When/Then: 祝日で非空文字列を返す
+        $name = $provider->holidayName(new \DateTimeImmutable('2024-01-01'));
+        $this->assertNotSame('', $name);
+
+        // When/Then: 非祝日で空文字を返す
+        $this->assertSame('', $provider->holidayName(new \DateTimeImmutable('2024-01-02')));
+    }
+
+    /**
+     * @group integration
+     */
+    public function testHolidaysBetweenWithRealApi(): void
+    {
+        // Given: 実 API で Provider を生成する
+        $provider = $this->createRealProvider();
+
+        // When: 2024年1月の範囲で祝日を取得する
+        $result = $provider->holidaysBetween(
+            new \DateTimeImmutable('2024-01-01'),
+            new \DateTimeImmutable('2024-01-31')
+        );
+
+        // Then: 1件以上の Holiday が返る
+        $this->assertNotEmpty($result);
+
+        // Then: 全要素が Holiday インスタンスで昇順に並んでいる
+        $prevDate = null;
+        foreach ($result as $holiday) {
+            $this->assertInstanceOf(\Heijitu\Holiday::class, $holiday);
+            $date = $holiday->getDate();
+            $this->assertInstanceOf(\DateTimeImmutable::class, $date);
+            if ($prevDate !== null) {
+                $this->assertGreaterThanOrEqual($prevDate, $date);
+            }
+            $prevDate = $date;
+        }
+    }
 }

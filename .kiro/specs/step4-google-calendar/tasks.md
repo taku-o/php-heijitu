@@ -48,9 +48,9 @@
   - _Requirements: 3.1, 3.2, 3.3, 3.4, 3.5, 3.6_
   - _Depends: 3.2_
 
-- [ ] 5. テストの実装
+- [x] 5. テストの実装
 
-- [ ] 5.1 ユニットテスト（契約テスト）の実装
+- [x] 5.1 ユニットテスト（契約テスト）の実装
   - `tests/Providers/GoogleCalendar/ProviderTest.php` を `Heijitu\Tests\Providers\GoogleCalendar` 名前空間で新規作成する
   - 資格情報なし（`apiKey` と `credentialsFile` 両方空）でコンストラクタが `ProviderException` を throw することを検証する（契約テスト）
   - `new Provider('dummy_key', '')` が `HolidayProvider` インターフェースを実装していることを `assertInstanceOf(HolidayProvider::class, ...)` で検証する
@@ -59,7 +59,7 @@
   - _Requirements: 1.1, 3.6, 5.1, 5.2_
   - _Depends: 4.1_
 
-- [ ] 5.2 インテグレーションテストの実装
+- [x] 5.2 インテグレーションテストの実装
   - `@group integration` アノテーション付きで実 API 呼び出しテストを `ProviderTest.php` に追加する
   - `getenv('GOOGLE_API_KEY')` / `getenv('GOOGLE_CREDENTIALS_FILE')` で資格情報を取得し `Provider` コンストラクタに渡す（どちらも空のとき `markTestSkipped` でスキップ）
   - API キー認証で `isHoliday` が既知祝日で `true`・非祝日で `false` を返すことを検証する

@@ -191,13 +191,6 @@ jj new
 
 -------------
 
-
-
-
-
-
-
-
 takt --task "/kiro-impl step4-google-calendar 5
 必要ならテストを修正して良い。"
 
