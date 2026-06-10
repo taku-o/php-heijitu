@@ -1,7 +1,7 @@
 # Implementation Plan
 
-- [ ] 1. PHPDoc 追記
-- [ ] 1.1 (P) 値オブジェクト（Holiday・MonthDay）への PHPDoc 追記
+- [x] 1. PHPDoc 追記
+- [x] 1.1 (P) 値オブジェクト（Holiday・MonthDay）への PHPDoc 追記
   - `src/Holiday.php` にクラス説明・`__construct`・`getDate`・`getName` の PHPDoc を追記する
   - `src/MonthDay.php` にクラス説明・`__construct`・`getMonth`・`getDay`・`matches` の PHPDoc を追記する
   - `Holiday` クラスのクラス説明: 「祝日の日付と名称を保持する不変値オブジェクト」
@@ -11,7 +11,7 @@
   - _Requirements: 2.1, 2.2, 2.3_
   - _Boundary: src/Holiday.php, src/MonthDay.php_
 
-- [ ] 1.2 (P) プロバイダークラスへの PHPDoc 追記
+- [x] 1.2 (P) プロバイダークラスへの PHPDoc 追記
   - `src/Providers/HolidayJp/Provider.php` にクラス説明・`__construct` の `@throws` PHPDoc・`isHoliday`/`holidayName`/`holidaysBetween` への `/** {@inheritdoc} */` を追記する
   - `src/Providers/CaoCsv/Provider.php` の `isHoliday`・`holidayName` に `/** {@inheritdoc} */` を追記する
   - `src/Providers/GoogleCalendar/Provider.php` の `isHoliday`・`holidayName` に `/** {@inheritdoc} */` を追記する
@@ -20,7 +20,7 @@
   - _Requirements: 2.1, 2.2, 2.4_
   - _Boundary: src/Providers/_
 
-- [ ] 1.3 (P) 例外クラスへの PHPDoc 追記
+- [x] 1.3 (P) 例外クラスへの PHPDoc 追記
   - `src/Exception/HeijituException.php` に「php-heijitu が投げる例外の共通マーカーインターフェース。`catch (HeijituException $e)` で全例外を一括捕捉できる」説明を追記する
   - `src/Exception/ConfigException.php` に「設定ファイルの読み込み・パース失敗時の例外」説明を追記する
   - `src/Exception/ProviderException.php` に「プロバイダーのデータ取得・API 呼び出し失敗時の例外」説明を追記する

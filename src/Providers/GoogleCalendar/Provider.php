@@ -41,12 +41,14 @@ final class Provider implements HolidayProvider
         $this->credentialsFile = $credentialsFile;
     }
 
+    /** {@inheritdoc} */
     public function isHoliday(\DateTimeImmutable $t): bool
     {
         $events = $this->fetchEvents($t, $t);
         return isset($events[$this->dateKey($t)]);
     }
 
+    /** {@inheritdoc} */
     public function holidayName(\DateTimeImmutable $t): string
     {
         $events = $this->fetchEvents($t, $t);
