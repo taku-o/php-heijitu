@@ -209,6 +209,14 @@ jj new
 
 jj new
 
+-------------
+
+!jj-merge feature/step4-google-calendar
+/commit-push-pr-update
+/review 4
+
+要修正と注意事項を修正してください
+
 
 
 
