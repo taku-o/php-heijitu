@@ -43,7 +43,7 @@ final class Provider implements HolidayProvider
         return $this->holidays[$this->dateKey($t)] ?? '';
     }
 
-    /** @return Holiday[] */
+    /** {@inheritdoc} */
     public function holidaysBetween(\DateTimeImmutable $from, \DateTimeImmutable $to): array
     {
         if ($from > $to) {
