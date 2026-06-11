@@ -74,26 +74,32 @@ if ($tmpBase === false) {
     die('Failed to create temporary file.' . PHP_EOL);
 }
 $tmpPath = $tmpBase . '.json';
-file_put_contents($tmpBase, json_encode([
+$written = file_put_contents($tmpBase, json_encode([
     'excluded_dates' => [
         ['month' => 8, 'day' => 15],
         ['month' => 12, 'day' => 29],
     ],
 ]));
+if ($written === false) {
+    unlink($tmpBase);
+    die('Failed to write temporary config file.' . PHP_EOL);
+}
 rename($tmpBase, $tmpPath);
 
-$configExcluded = Config::loadExcludedDates($tmpPath);
-echo "Loaded excluded dates from config: " . count($configExcluded) . " entries" . PHP_EOL;
+try {
+    $configExcluded = Config::loadExcludedDates($tmpPath);
+    echo "Loaded excluded dates from config: " . count($configExcluded) . " entries" . PHP_EOL;
 
-$manualExcluded = [new MonthDay(12, 31)];
-$merged = array_merge($configExcluded, $manualExcluded);
-$calMerged = new BusinessCalendar($provider, $merged);
-echo "Total excluded dates (config + manual): " . count($merged) . " entries" . PHP_EOL;
+    $manualExcluded = [new MonthDay(12, 31)];
+    $merged = array_merge($configExcluded, $manualExcluded);
+    $calMerged = new BusinessCalendar($provider, $merged);
+    echo "Total excluded dates (config + manual): " . count($merged) . " entries" . PHP_EOL;
 
-$obon2024 = new DateTimeImmutable('2024-08-15');
-echo "2024-08-15 is business day (merged): " . ($calMerged->isBusinessDay($obon2024) ? 'true' : 'false') . PHP_EOL;
-
-unlink($tmpPath);
+    $obon2024 = new DateTimeImmutable('2024-08-15');
+    echo "2024-08-15 is business day (merged): " . ($calMerged->isBusinessDay($obon2024) ? 'true' : 'false') . PHP_EOL;
+} finally {
+    unlink($tmpPath);
+}
 
 echo PHP_EOL;
 
