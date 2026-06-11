@@ -66,22 +66,22 @@
   - _Requirements: 3.5, 3.6, 3.7_
   - _Boundary: CHANGELOG.md, CONTRIBUTING.md, LICENSE_
 
-- [ ] 4. docs/ ドキュメントの作成
-- [ ] 4.1 docs/en・docs/ja の api-spec.md を作成する
+- [x] 4. docs/ ドキュメントの作成
+- [x] 4.1 docs/en・docs/ja の api-spec.md を作成する
   - `docs/en/` および `docs/ja/` ディレクトリを作成する
   - `docs/en/api-spec.md` を作成する: `BusinessCalendar`（コンストラクタ＋全5メソッドのシグネチャ・例外）・`HolidayProvider` インターフェース（3メソッド）・`MonthDay`・`Holiday`・`Config`・例外クラス階層・設定ファイル仕様（YAML/JSON フォーマット表）を記載する
   - `docs/ja/api-spec.md` を同等の内容で日本語にて作成する
   - 2ファイルが作成されており全公開クラス・全メソッドのシグネチャと設定ファイル仕様が記載されていること
   - _Requirements: 4.1, 4.2_
 
-- [ ] 4.2 (P) docs/en・docs/ja の usage.md を作成する
+- [x] 4.2 (P) docs/en・docs/ja の usage.md を作成する
   - `docs/en/usage.md` を作成する: インストール手順・基本的な使い方・除外日付指定（コンストラクタ引数・設定ファイル・array_merge）・全 API 別コード例（`isBusinessDay`・`nextBusinessDay`・`firstBusinessDayOfMonth`・`firstBusinessDaysOfYear`・`holidays`）・`extraExcluded`・タイムゾーン設定方法を含む
   - `docs/ja/usage.md` を同等の内容で日本語にて作成する
   - 2ファイルが作成されており各 API のコード例が含まれていること
   - _Requirements: 4.3_
   - _Boundary: docs/en/usage.md, docs/ja/usage.md_
 
-- [ ] 4.3 (P) docs/en・docs/ja の providers.md を作成する
+- [x] 4.3 (P) docs/en・docs/ja の providers.md を作成する
   - `docs/en/providers.md` を作成する: 3プロバイダー（HolidayJp・CaoCsv・GoogleCalendar）の比較表（特徴・依存・推奨ユースケース）・各プロバイダーのセットアップ方法・Google Calendar API キー取得手順（GCP コンソール）・コンストラクタへの渡し方・`getenv('GOOGLE_API_KEY')` 環境変数連携パターン・holiday-jp データ陳腐化注意（2021 年以降の祝日変更に未対応）を含む
   - `docs/ja/providers.md` を同等の内容で日本語にて作成する
   - 2ファイルが作成されており Google Calendar API キー取得手順が含まれていること
