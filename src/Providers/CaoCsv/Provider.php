@@ -31,17 +31,19 @@ final class Provider implements HolidayProvider
         $this->holidays = $this->parseAndStore($content);
     }
 
+    /** {@inheritdoc} */
     public function isHoliday(\DateTimeImmutable $t): bool
     {
         return isset($this->holidays[$this->dateKey($t)]);
     }
 
+    /** {@inheritdoc} */
     public function holidayName(\DateTimeImmutable $t): string
     {
         return $this->holidays[$this->dateKey($t)] ?? '';
     }
 
-    /** @return Holiday[] */
+    /** {@inheritdoc} */
     public function holidaysBetween(\DateTimeImmutable $from, \DateTimeImmutable $to): array
     {
         if ($from > $to) {

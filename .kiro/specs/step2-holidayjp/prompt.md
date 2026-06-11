@@ -1,5 +1,5 @@
 /kiro-spec-requirements
-docs/planningにプロジェクトの開発計画の資料が置いてあります。
+.kiro/specs/initial-planning/planningにプロジェクトの開発計画の資料が置いてあります。
 まずその資料を読み込み、
 次に、開発計画ステップ2の開発を進めていきます。
 
@@ -83,7 +83,7 @@ jj new
 
 
 途中、見つかったこの問題、最終的にはドキュメントに記載したい。
-後々のタスクでドキュメント記載の作業を忘れないように、docs/planningに記載してくれない？
+後々のタスクでドキュメント記載の作業を忘れないように、.kiro/specs/initial-planning/planningに記載してくれない？
 「動作確認には使えるけど、運用では別のプロバイダーを使うべき」、と。
   1. holiday-jp/holiday_jp のデータ範囲（既知の弱点）
   ライブラリの祝日データは

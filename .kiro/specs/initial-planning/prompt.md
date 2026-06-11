@@ -4,7 +4,7 @@ Go言語製営業日取得ライブラリ
 
 まず、go-heijituプロジェクトを解析し、
 そのPHP版を作る方法を検討します。
-検討資料、分析資料は docs/planning に作成してください。
+検討資料、分析資料は .kiro/specs/initial-planning/planning に作成してください。
 
 特に、
 ~/Documents/workspaces/go-heijitu/.kiro/specs/initial-planning/
@@ -94,7 +94,7 @@ Dockerを利用して開発を進められる？
   1. 構成は 案A（2サービス） で進めてよいか
 
 資料に記録する。
-  2. この Docker 環境構成を docs/planning/
+  2. この Docker 環境構成を .kiro/specs/initial-planning/planning/
   に「開発環境」資料として記録するか（残すなら実装前の設計として明文化します）
 
 後の実装の段階で用意する。

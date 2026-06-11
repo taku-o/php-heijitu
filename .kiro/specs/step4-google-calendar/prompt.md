@@ -1,5 +1,5 @@
 /kiro-spec-requirements
-docs/planningにプロジェクトの開発計画の資料が置いてあります。
+.kiro/specs/initial-planning/planningにプロジェクトの開発計画の資料が置いてあります。
 まずその資料を読み込み、
 次に、開発計画ステップ4の開発を進めていきます。
 
@@ -63,7 +63,7 @@ export GOOGLE_API_KEY
 !echo GOOGLE_API_KEY=$GOOGLE_API_KEY > /Users/taku-o/Documents/workspaces/php-heijitu/.env
 
 開発用の.envファイルのセットアップは、ドキュメントに記載したい。
-docs/planningに資料がある。
+.kiro/specs/initial-planning/planningに資料がある。
 後のステップ5のタスクの作業で、作業が漏れないように、記載を追加して。
 
 /kiro-validate-gap step4-google-calendar

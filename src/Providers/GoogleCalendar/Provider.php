@@ -41,19 +41,21 @@ final class Provider implements HolidayProvider
         $this->credentialsFile = $credentialsFile;
     }
 
+    /** {@inheritdoc} */
     public function isHoliday(\DateTimeImmutable $t): bool
     {
         $events = $this->fetchEvents($t, $t);
         return isset($events[$this->dateKey($t)]);
     }
 
+    /** {@inheritdoc} */
     public function holidayName(\DateTimeImmutable $t): string
     {
         $events = $this->fetchEvents($t, $t);
         return $events[$this->dateKey($t)] ?? '';
     }
 
-    /** @return Holiday[] */
+    /** {@inheritdoc} */
     public function holidaysBetween(\DateTimeImmutable $from, \DateTimeImmutable $to): array
     {
         if ($from > $to) {
