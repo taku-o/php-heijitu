@@ -40,8 +40,8 @@
   - `php examples/main.php` を実行すると各セクションの結果が stdout に出力され、exit code 0 で完走すること（ネットワーク接続が必要）
   - _Requirements: 1.1, 1.2, 1.3, 1.4, 1.5, 1.6_
 
-- [ ] 3. README・ルートドキュメントの作成
-- [ ] 3.1 README.md（英語）の作成
+- [x] 3. README・ルートドキュメントの作成
+- [x] 3.1 README.md（英語）の作成
   - `README.md` を新規作成する（既存の 1 行スケルトンを全面置換）
   - インストール手順: GitHub VCS 配布の `repositories` 設定・`composer require` コマンド（プロバイダー依存も案内）を含む
   - クイックスタート: HolidayJp を使った最小サンプルコードを含む
@@ -51,14 +51,14 @@
   - README.md を読んだ初めての利用者がインストールから基本的な使い方を把握できる内容であること
   - _Requirements: 3.1, 3.2, 3.3, 3.4_
 
-- [ ] 3.2 (P) README-ja.md（日本語）の作成
+- [x] 3.2 (P) README-ja.md（日本語）の作成
   - `README-ja.md` を新規作成する
   - README.md と同等の内容（インストール・クイックスタート・除外日付・データ陳腐化注意・タイムゾーン案内）を日本語で記述する
   - `README-ja.md` がプロジェクトルートに存在すること
   - _Requirements: 3.1, 3.2, 3.3, 3.4_
   - _Boundary: README-ja.md_
 
-- [ ] 3.3 (P) CHANGELOG.md・CONTRIBUTING.md・LICENSE の作成
+- [x] 3.3 (P) CHANGELOG.md・CONTRIBUTING.md・LICENSE の作成
   - `CHANGELOG.md` を Keep a Changelog 形式で作成する（`[Unreleased]` セクションのみ。`Added`・`Changed`・`Fixed` サブセクションを用意）
   - `CONTRIBUTING.md` を作成する（PR の送り方・PHP 7.4 基準コーディング規約・PHPUnit 実行方法・Docker 環境の使い方を含む）
   - `LICENSE` に MIT ライセンス全文を作成する（copyright holder: taku-o）
