@@ -5,7 +5,7 @@
 日本の営業日を計算する PHP ライブラリ `php-heijitu`（Go 製 `go-heijitu` の PHP 移植版）のコア部分を実装する。
 本ステップでは、ライブラリの骨格となるプロジェクト構成・値オブジェクト・`HolidayProvider` インターフェース・`BusinessCalendar` を構築し、`isBusinessDay()` の判定ロジックまでを動作可能な状態にする。
 
-祝日判定の具体的な実装（各プロバイダー）と `isBusinessDay` 以外の API は後続ステップで実装する。Go 版の `(値, error)` 多値返却は PHP の例外送出に、関数オプション（`WithExcludedDates` / `WithConfig`）はコンストラクタ引数＋設定ローダーに置き換える（`docs/planning/decisions.md` で確定）。
+祝日判定の具体的な実装（各プロバイダー）と `isBusinessDay` 以外の API は後続ステップで実装する。Go 版の `(値, error)` 多値返却は PHP の例外送出に、関数オプション（`WithExcludedDates` / `WithConfig`）はコンストラクタ引数＋設定ローダーに置き換える（`.kiro/specs/initial-planning/planning/decisions.md` で確定）。
 
 ## Boundary Context
 

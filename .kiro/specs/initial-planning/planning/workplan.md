@@ -243,7 +243,7 @@ Step 1（コア）
 
 ## go-heijitu の開発実績との対応
 
-go-heijitu は同じ5ステップを Kiro 流の spec 駆動（各ステップに requirements / design / tasks）で実施し、`.kiro/specs/step1-core` 〜 `step5-docs` として記録されている。php-heijitu も同様に、各ステップを spec 駆動で進めることができる（`/kiro-spec-*` ワークフロー）。本資料群（`docs/planning/`）は go-heijitu の `docs/planning/`（investigation / design / structure / workplan / api-spec）に対応する検討フェーズの成果物にあたる。
+go-heijitu は同じ5ステップを Kiro 流の spec 駆動（各ステップに requirements / design / tasks）で実施し、`.kiro/specs/step1-core` 〜 `step5-docs` として記録されている。php-heijitu も同様に、各ステップを spec 駆動で進めることができる（`/kiro-spec-*` ワークフロー）。本資料群（`.kiro/specs/initial-planning/planning/`）は go-heijitu の `docs/planning/`（investigation / design / structure / workplan / api-spec）に対応する検討フェーズの成果物にあたる。
 
 ---
 

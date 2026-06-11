@@ -9,7 +9,7 @@ php-heijitu は **完全な greenfield プロジェクト**。存在するファ
 .claude/          # スキル定義（変更不要）
 .gitignore
 CLAUDE.md
-docs/planning/    # 設計・計画資料（5ファイル）
+.kiro/specs/initial-planning/planning/    # 設計・計画資料（5ファイル）
 README.md
 ```
 
@@ -165,6 +165,6 @@ BusinessCalendar (HolidayProvider, MonthDay, ProviderException に依存)
 
 ### Research Needed（設計フェーズで要調査）
 
-- **Docker 環境の事前構築**: Docker 環境が未作成のため `composer install` の動作確認が取れていない。Step 1 着手前に `docker/` を用意する必要がある（`docs/planning/dev-environment.md` に設計あり）
+- **Docker 環境の事前構築**: Docker 環境が未作成のため `composer install` の動作確認が取れていない。Step 1 着手前に `docker/` を用意する必要がある（`.kiro/specs/initial-planning/planning/dev-environment.md` に設計あり）
 - **`symfony/yaml ^5.4` の `require-dev` 追加後の PHP 7.4 動作**: `composer install` が問題なく通ることを実機確認
 - **`phpunit/phpunit ^9.6` の PHP 7.4/8.1 両バージョンでのテスト実行**: Docker の `php74`/`php81` 両サービスで `vendor/bin/phpunit` が通ることを確認

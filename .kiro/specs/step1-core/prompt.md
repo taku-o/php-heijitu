@@ -1,5 +1,5 @@
 /kiro-spec-requirements
-docs/planningにプロジェクトの開発計画の資料が置いてあります。
+.kiro/specs/initial-planning/planningにプロジェクトの開発計画の資料が置いてあります。
 まずその資料を読み込み、
 次に、開発計画ステップ1の開発を進めていきます。
 

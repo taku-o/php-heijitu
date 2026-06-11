@@ -105,8 +105,8 @@
   - _Depends: 2.1_
   - _Requirements: 1.7, 5.4, 5.5_
 
-- [ ] 6. 計画ドキュメントの移動
-- [ ] 6.1 docs/planning/ を .kiro/specs/initial-planning/planning/ へ移動する
+- [x] 6. 計画ドキュメントの移動
+- [x] 6.1 docs/planning/ を .kiro/specs/initial-planning/planning/ へ移動する
   - `docs/planning/` 配下の全ファイルを `.kiro/specs/initial-planning/planning/` へ移動する
   - 移動後、`docs/planning/` ディレクトリが存在しないこと
   - `.kiro/specs/initial-planning/planning/` 配下に全ファイルが存在することを確認する
