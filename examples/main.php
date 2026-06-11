@@ -69,13 +69,18 @@ echo PHP_EOL;
 
 echo "=== Config File ===" . PHP_EOL;
 
-$tmpPath = tempnam(sys_get_temp_dir(), 'heijitu_');
-file_put_contents($tmpPath, json_encode([
+$tmpBase = tempnam(sys_get_temp_dir(), 'heijitu_');
+if ($tmpBase === false) {
+    die('Failed to create temporary file.' . PHP_EOL);
+}
+$tmpPath = $tmpBase . '.json';
+file_put_contents($tmpBase, json_encode([
     'excluded_dates' => [
         ['month' => 8, 'day' => 15],
         ['month' => 12, 'day' => 29],
     ],
 ]));
+rename($tmpBase, $tmpPath);
 
 $configExcluded = Config::loadExcludedDates($tmpPath);
 echo "Loaded excluded dates from config: " . count($configExcluded) . " entries" . PHP_EOL;

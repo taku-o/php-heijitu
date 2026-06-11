@@ -139,6 +139,30 @@ jj new
 
 jj new
 
+-------------
+
+/kiro-impl step5-docs 5
+必要ならテストを修正して良い。
+
+/kiro-review-feature step5-docs 5
+必要ならテストを修正して良い。
+
+jj new
+
+-------------
+
+/kiro-impl step5-docs 6
+必要ならテストを修正して良い。
+
+/kiro-review-feature step5-docs 6
+必要ならテストを修正して良い。
+
+jj new
+
+
+
+
+
 
 
 

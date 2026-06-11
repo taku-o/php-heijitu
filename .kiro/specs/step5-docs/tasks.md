@@ -88,8 +88,8 @@
   - _Requirements: 4.4, 4.5, 4.6_
   - _Boundary: docs/en/providers.md, docs/ja/providers.md_
 
-- [ ] 5. PHP 7.4・8.1 最終確認
-- [ ] 5.1 PHPUnit テストを PHP 7.4・8.1 の両環境で実行する
+- [x] 5. PHP 7.4・8.1 最終確認
+- [x] 5.1 PHPUnit テストを PHP 7.4・8.1 の両環境で実行する
   - `docker compose -f docker/compose.yaml run --rm php74 vendor/bin/phpunit` を実行する
   - `docker compose -f docker/compose.yaml run --rm php81 vendor/bin/phpunit` を実行する
   - PHP 7.4 で FAILURES: 0, ERRORS: 0 を確認する
@@ -97,7 +97,7 @@
   - PHP 7.4・8.1 両環境での PHPUnit 全テスト（integration グループ除く）がエラーなしで通過していること
   - _Requirements: 5.1, 5.2, 5.3_
 
-- [ ] 5.2 examples/main.php を PHP 7.4・8.1 の両環境で実行する
+- [x] 5.2 examples/main.php を PHP 7.4・8.1 の両環境で実行する
   - `docker compose -f docker/compose.yaml run --rm php74 php examples/main.php` を実行する
   - `docker compose -f docker/compose.yaml run --rm php81 php examples/main.php` を実行する
   - 両環境で期待通りの出力と exit code 0 を確認する（実行にはネットワーク接続が必要）
