@@ -28,8 +28,8 @@
   - _Requirements: 2.1, 2.5_
   - _Boundary: src/Exception/_
 
-- [ ] 2. examples/main.php の作成
-- [ ] 2.1 全プロバイダー・全APIパターンのサンプルスクリプトを作成する
+- [x] 2. examples/main.php の作成
+- [x] 2.1 全プロバイダー・全APIパターンのサンプルスクリプトを作成する
   - `examples/` ディレクトリを作成し `examples/main.php` を新規作成する
   - Section 1（HolidayJp 全 API）: `isBusinessDay`・`nextBusinessDay`・`firstBusinessDayOfMonth`・`firstBusinessDaysOfYear`・`holidays` の呼び出しと echo 出力を含む
   - Section 2（コンストラクタ除外日付）: `new BusinessCalendar($provider, [new MonthDay(8, 15), new MonthDay(12, 31)])` パターンを含む
