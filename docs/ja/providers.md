@@ -26,11 +26,11 @@ use Heijitu\Providers\HolidayJp\Provider as HolidayJpProvider;
 $provider = new HolidayJpProvider();
 ```
 
-### データの陳腐化に関する注意
+### プロバイダーの選び方
 
-`holiday-jp/holiday_jp` パッケージに組み込まれている祝日データは **2020 年以降更新されていません**。2021 年以降の祝日変更（東京オリンピック開催に伴う山の日の一時変更など）は**反映されていません**。
+`HolidayJp` はネットワーク接続不要なオフラインプロバイダーです。内閣府 CSV との比較で実質的な祝日の差異はなく、ほとんどのユースケースで使用できます。
 
-2020 年以降の正確な祝日データが必要な本番運用では `CaoCsv` または `GoogleCalendar` プロバイダーを使用してください。
+外部からリアルタイムで祝日データを取得したい場合は `CaoCsv` または `GoogleCalendar` プロバイダーを使用してください。
 
 ---
 

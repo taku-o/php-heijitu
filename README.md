@@ -108,11 +108,11 @@ excluded_dates:
 | `CaoCsv` | `ext-mbstring` | 内閣府 CSV（オンライン取得またはローカルファイル） |
 | `GoogleCalendar` | `google/apiclient` | Google Calendar API |
 
-## データの陳腐化に関する注意
+## プロバイダーの選び方
 
-`HolidayJp` プロバイダーが使用する `holiday-jp/holiday_jp` パッケージのデータは **2020 年以降更新されていません**。2021 年以降の祝日変更（山の日の調整等）は反映されていません。
+`HolidayJp` はネットワーク接続不要なオフラインプロバイダーです。内閣府 CSV との比較で実質的な祝日の差異はなく、ほとんどのユースケースで使用できます。
 
-本番運用では、最新の祝日データを取得できる **`CaoCsv`** または **`GoogleCalendar`** プロバイダーの使用を推奨します。
+外部からリアルタイムで祝日データを取得したい場合は **`CaoCsv`** または **`GoogleCalendar`** プロバイダーを使用してください。
 
 ## タイムゾーンについて
 
