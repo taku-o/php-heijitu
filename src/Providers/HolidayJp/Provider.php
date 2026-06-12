@@ -10,9 +10,7 @@ use Heijitu\HolidayProvider;
 use HolidayJp\HolidayJp;
 
 /**
- * holiday-jp/holiday_jp を使用した祝日プロバイダー。
- * データは 2020 年で更新停止しており 2021 年以降の祝日変更に未対応。
- * 本番用途では CaoCsv または GoogleCalendar プロバイダーの使用を推奨。
+ * holiday-jp/holiday_jp を使用したオフライン祝日プロバイダー。ネットワーク接続不要。
  */
 final class Provider implements HolidayProvider
 {

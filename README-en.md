@@ -108,11 +108,11 @@ See [`docs/en/providers.md`](docs/en/providers.md) for setup instructions for ea
 | `CaoCsv` | `ext-mbstring` | Cabinet Office CSV (online fetch or local file) |
 | `GoogleCalendar` | `google/apiclient` | Google Calendar API |
 
-## Data Currency Warning
+## Choosing a Provider
 
-The `HolidayJp` provider relies on `holiday-jp/holiday_jp`, whose bundled data **has not been updated since 2020**. Holiday changes after 2021 (such as adjustments to Mountain Day) are **not reflected**.
+`HolidayJp` is an offline provider that requires no network access. Comparison with the Cabinet Office CSV confirms no practical differences in holiday data, making it suitable for most use cases.
 
-For production use, prefer the **`CaoCsv`** or **`GoogleCalendar`** provider, which fetches up-to-date holiday data.
+Use the **`CaoCsv`** or **`GoogleCalendar`** provider if you want to fetch holiday data from an external source in real time.
 
 ## Timezone
 

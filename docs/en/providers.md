@@ -26,11 +26,11 @@ use Heijitu\Providers\HolidayJp\Provider as HolidayJpProvider;
 $provider = new HolidayJpProvider();
 ```
 
-### Data currency warning
+### Choosing a provider
 
-The `holiday-jp/holiday_jp` package bundles holiday data that **has not been updated since 2020**. Holiday adjustments after 2021 (such as the temporary Mountain Day changes during the Tokyo Olympics) are **not reflected**.
+`HolidayJp` is an offline provider that requires no network access. Comparison with the Cabinet Office CSV confirms no practical differences in holiday data, making it suitable for most use cases.
 
-For production use where accuracy beyond 2020 is required, use the `CaoCsv` or `GoogleCalendar` provider.
+Use the `CaoCsv` or `GoogleCalendar` provider if you want to fetch holiday data from an external source in real time.
 
 ---
 
