@@ -108,12 +108,6 @@ See [`docs/en/providers.md`](docs/en/providers.md) for setup instructions for ea
 | `CaoCsv` | `ext-mbstring` | Cabinet Office CSV (online fetch or local file) |
 | `GoogleCalendar` | `google/apiclient` | Google Calendar API |
 
-## Choosing a Provider
-
-`HolidayJp` is an offline provider that requires no network access. Comparison with the Cabinet Office CSV confirms no practical differences in holiday data, making it suitable for most use cases.
-
-Use the **`CaoCsv`** or **`GoogleCalendar`** provider if you want to fetch holiday data from an external source in real time.
-
 ## Timezone
 
 This library compares dates using PHP's default timezone. Always set the timezone to `Asia/Tokyo` before using the library:

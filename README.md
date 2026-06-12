@@ -108,12 +108,6 @@ excluded_dates:
 | `CaoCsv` | `ext-mbstring` | 内閣府 CSV（オンライン取得またはローカルファイル） |
 | `GoogleCalendar` | `google/apiclient` | Google Calendar API |
 
-## プロバイダーの選び方
-
-`HolidayJp` はネットワーク接続不要なオフラインプロバイダーです。内閣府 CSV との比較で実質的な祝日の差異はなく、ほとんどのユースケースで使用できます。
-
-外部からリアルタイムで祝日データを取得したい場合は **`CaoCsv`** または **`GoogleCalendar`** プロバイダーを使用してください。
-
 ## タイムゾーンについて
 
 このライブラリは PHP のデフォルトタイムゾーンを使って日付を比較します。必ずライブラリ使用前にタイムゾーンを `Asia/Tokyo` に設定してください。
