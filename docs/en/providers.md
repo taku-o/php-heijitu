@@ -26,12 +26,6 @@ use Heijitu\Providers\HolidayJp\Provider as HolidayJpProvider;
 $provider = new HolidayJpProvider();
 ```
 
-### Choosing a provider
-
-`HolidayJp` is an offline provider that requires no network access. Comparison with the Cabinet Office CSV confirms no practical differences in holiday data, making it suitable for most use cases.
-
-Use the `CaoCsv` or `GoogleCalendar` provider if you want to fetch holiday data from an external source in real time.
-
 ---
 
 ## CaoCsv

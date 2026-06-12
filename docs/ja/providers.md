@@ -26,12 +26,6 @@ use Heijitu\Providers\HolidayJp\Provider as HolidayJpProvider;
 $provider = new HolidayJpProvider();
 ```
 
-### プロバイダーの選び方
-
-`HolidayJp` はネットワーク接続不要なオフラインプロバイダーです。内閣府 CSV との比較で実質的な祝日の差異はなく、ほとんどのユースケースで使用できます。
-
-外部からリアルタイムで祝日データを取得したい場合は `CaoCsv` または `GoogleCalendar` プロバイダーを使用してください。
-
 ---
 
 ## CaoCsv
